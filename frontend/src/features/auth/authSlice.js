@@ -71,7 +71,6 @@ export const authSlice= createSlice({
             state.message=action.payload
             state.user=null
 
-
         })
 
         .addCase(login.pending,(state)=>{

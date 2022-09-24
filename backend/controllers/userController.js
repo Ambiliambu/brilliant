@@ -9,7 +9,7 @@ const jwt =require('jsonwebtoken')
 
 //register a user
 const registerUser=asynchandler(async(req,res)=>{
-    const {name,email,password}=req.body
+    const {name,email,password,isStudent}=req.body
      
     if(!name || !email || !password){
       res.status(400)
@@ -32,6 +32,7 @@ const registerUser=asynchandler(async(req,res)=>{
         name,
         email,
         password:hashedPassword,
+        isStudent
     })
 
     if(user){
@@ -39,6 +40,7 @@ const registerUser=asynchandler(async(req,res)=>{
             _id:user.id,
             name:user.name,
             email:user.email,
+            isStudent:user.isStudent
         })
     }else{
         res.status(400)
@@ -117,6 +119,7 @@ const loginUser=asynchandler(async(req,res)=>{
             _id:user.id,
             name:user.name,
             email:user.email,
+            isStudent:user.isStudent,
             accessToken,
             refreshToken
 
@@ -138,7 +141,8 @@ const getUser=asynchandler(async(req,res)=>{
     res.status(200).json({
         id:_id,
         name,
-        email
+        email,
+        isStudent
     })
     //res.status(200).json(req.user)
     //because we already written find in the middleware 
@@ -156,64 +160,17 @@ const logoutUser=asynchandler(async(req,res)=>{
 
 
 
-
-//register a student
-
-const registerStudent=asynchandler(async(req,res)=>{
-    const {name,email,parentsname,parentsnumber,phonenumber}=req.body
-     
-    if(!name || !email || !parentsname || !parentsnumber || !phonenumber || !course){
-      res.status(400)
-      throw new Error('Please add all field')
-    }
-    //check user exist
-    const studentExist=await Student.findOne({email})
-    if(studentExist){
-        res.status(400)
-        throw new Error('Student already exist')
-        }
-    
-   
-
-     //create Student
-    const student=await Student.create({
-        name,
-        email,
-        parentsname,
-        parentsnumber,
-        phonenumber,
-        course
-        
-    })
-
-    if(student){
-        res.status(201).json({
-            _id:student.id,
-            name:student.name,
-            email:student.email,
-            parentsname:student.parentsname,
-            parentsnumber:student.parentsnumber,
-            course:student.course
-        })
-    }else{
-        res.status(400)
-        throw new Error('Invalid user data')
-    }
-
-    
+ //accept user as student
+const acceptStudent=asynchandler(async(req,res)=>{
+    try{
+        const id=req.body.userId
+        const accepted=await User.findByIdAndUpdate(id,{"isStudent":true},{new:true})
+       res.status(200).json(accepted)
+          
+  }catch(error){
+        res.status(400).json("error is occured")
+  }
 })
-
-
-
-
-// //generate token
-// const generateToken=(id)=>{
-//     return jwt.sign({id},process.env.JWT_SECRET,{
-//         expiresIn:'15m',
-
-//     })
-// }
-
 
 module.exports={
     registerUser,
@@ -221,6 +178,7 @@ module.exports={
     getUser,
     refreshFunction,
     logoutUser,
-    registerStudent
+    acceptStudent,
+    
    
 }

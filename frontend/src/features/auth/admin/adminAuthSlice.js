@@ -1,5 +1,5 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
-import adminAuthService from './adminAuthService'
+import adminAuthService from '../admin/adminAuthService'
 
 //Get admin from localstorage
 const admin=JSON.parse(localStorage.getItem('admin'))
@@ -15,7 +15,7 @@ const initialState={
 
 
 //Login Admin
-export const adminlogin= createAsyncThunk('auth/adminlogin',async(admin,thunkAPI)=>{
+export const adminlogin= createAsyncThunk('adminauth/adminlogin',async(admin,thunkAPI)=>{
     try{
         return await adminAuthService.adminlogin(admin)
     }catch(error){
@@ -26,15 +26,38 @@ export const adminlogin= createAsyncThunk('auth/adminlogin',async(admin,thunkAPI
     }
 }) 
 
-export const adminlogout=createAsyncThunk('auth/adminlogout',async()=>{
+export const adminlogout=createAsyncThunk('adminauth/adminlogout',async()=>{
     await adminAuthService.adminlogout()
 })
 
 
+// const course=JSON.parse(localStorage.getItem('course'))
+
+// const initialState={
+//     course:course ? course :null,
+//     isError:false,
+//     isSuccess:false,
+//     isLoading:false,
+//     message:'',
+// }
+
+
+
+// //Login Admin
+// export const courselogin= createAsyncThunk('courseauth/courselogin',async(course,thunkAPI)=>{
+//     try{
+//         return await courseAuthService.adminlogin(admin)
+//     }catch(error){
+//         const message=(error.response && error.response.data && error.response.data.message)|| error.message || error.toString()
+        
+//         return thunkAPI.rejectWithValue(message)
+
+//     }
+// }) 
 
 
 export const adminAuthSlice= createSlice({
-    name:'admin',
+    name:'adminauth',
     initialState,
     reducers:{
         reset:(state)=>{

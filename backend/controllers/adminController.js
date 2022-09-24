@@ -1,5 +1,5 @@
 const asynchandler=require('express-async-handler')
-const Admin=require('../models/adminModel')
+const {Admin,Course}=require('../models/adminModel')
 const jwt =require('jsonwebtoken')
 const bcrypt=require('bcryptjs')
 
@@ -69,8 +69,8 @@ const loginAdmin=asynchandler(async(req,res)=>{
 
 //get admin
 const getAdmin=asynchandler(async(req,res)=>{
-    
-    const {_id,name,email}=await User.findById(req.admin.id)
+    console.log("as",req.admin);
+    const {_id,name,email}=await Admin.findById(req.admin.id)
 
     res.status(200).json({
         id:_id,
@@ -85,11 +85,13 @@ const getAdmin=asynchandler(async(req,res)=>{
 })
 //generate token
 const generateToken=(id)=>{
-    return jwt.sign({id},process.env.JWT_SECRET,{
+    return jwt.sign({id},process.env.JWT_SECRET2,{
         expiresIn:'30d',
 
     })
 }
+
+
 
 
 module.exports={

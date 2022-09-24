@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner'
 import './Form.scss'
 import Header from '../components/Header'
 import { useForm } from 'react-hook-form'
+import Footer from '../components/Footer'
 
 
 function Login() {
@@ -27,19 +28,29 @@ function Login() {
 
 
     useEffect(()=>{
+      // const userin=JSON.parse(localStorage.getItem('user'))
+      // console.log("ur",userin);
         if (isError){
           toast.error(message)
         }
   
-        if(isSuccess || user){
-          navigate('/')
-        }
+      //  console.log("useroo",user);
   
+        if(isSuccess && user){
+          if(user.isStudent){
+            navigate('/studentpage')
+          }
+          else{
+          navigate('/')
+          }
+        }
+      
         dispatch(reset())
   
       },[user,isError,isSuccess,message,navigate,dispatch])
 
  
+
 
   const onSubmit=(data)=>{
    
@@ -132,6 +143,7 @@ function Login() {
       </div>
     </div>
    </div>
+   <Footer/>
    </div>
   )
 }

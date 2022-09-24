@@ -1,4 +1,6 @@
 const mongoose=require('mongoose')
+const Schema = mongoose.Schema
+const ObjectId = Schema.Types.ObjectId 
 
 const userSchema=mongoose.Schema({
     name:{
@@ -13,6 +15,12 @@ const userSchema=mongoose.Schema({
     password:{
         type:String,
         required:[true,'Please add an password']
+    }, 
+    isStudent:{
+        type:Boolean,
+        required:true,
+        default:false
+        
     }
 
 },{
@@ -35,7 +43,7 @@ const studentSchema=mongoose.Schema({
         type:String,
         required:[true,'Please add an parent name']
     },
-    parentnumber:{
+    parentsnumber:{
         type:Number,
         required:[true,'Please add parent number']
     },
@@ -46,15 +54,63 @@ const studentSchema=mongoose.Schema({
     course:{
         type:String,
         required:[true,'Please add course']
+    },
+    userId:{
+        type:ObjectId,
+        ref :  "User",
+    },
+    status:{
+        type:Boolean,
+        required:true,
+        default:false
+        
     }
 
+    
 
 },{
     timestamps:true
 })
+
+
+const transactionSchema=mongoose.Schema({
+    payId:{
+        type:String,
+        required:true
+    },
+    date:{
+        type:Date,
+        required:true
+    },
+    studentId:{
+        type:String,
+        required:true
+    },
+    courseId:{
+        type:String,
+        required:true
+    },
+    userId:{
+        type:String,
+        required:true
+    },
+    amount:{
+        type:Number,
+        reqiured:true
+    },
+    status:{
+        type:Boolean,
+        required:true,
+        default:false
+    }
+
+},{
+        timestamps:true
+    })
 const User= mongoose.model("User",userSchema)
 const Student=mongoose.model("Student",studentSchema)
-module.exports= {User,Student}
+const Transaction =mongoose.model("Transaction",transactionSchema)
+module.exports= {User,Student,Transaction}
 
 
 

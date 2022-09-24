@@ -14,7 +14,7 @@ const adminlogin =async (adminData)=>{
     return response.data
 }
 
-//Logout User
+//Logout admin
 const adminlogout=()=>{
     localStorage.removeItem('admin')
 }
@@ -24,10 +24,10 @@ const adminlogout=()=>{
 
 
 
-const authService={
+const adminAuthService={
 
     adminlogout,
     adminlogin
 }
 
-export default authService
+export default adminAuthService
