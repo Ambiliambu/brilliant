@@ -15,21 +15,27 @@ function AdminSidebar() {
     const {admin}=useSelector((state)=>state.adminauth)
     
     const [course,setCourse]=useState([]);
-   const array=["plusone","plustwo","crashcourse","centraluniversity"]
+
     const onLogout=()=>{
         dispatch(adminlogout())
         dispatch(reset())
         navigate('/admin')
     }
 
-    function handleNavigate(){
-      navigate('/plusone',{
-      state:{
-        name:"name"
-      }}
-      )
-      
+    const hadleSchedule=async(courseId)=>{
+
+      console.log("ppp",courseId);
+      try {
+        navigate(`/schedule/${courseId}`)
+      } catch (error) {
+    throw new error(error.response.data.message)
+        
+      }
     }
+
+
+
+
 
 
     useEffect(()=>{
@@ -48,10 +54,12 @@ function AdminSidebar() {
 
   
           }catch(error){
-              throw new error(error.response.data.message)
+             
+            console.log(error)
           }
       })();
   },[])
+
 
 
   return (
@@ -74,17 +82,36 @@ function AdminSidebar() {
                     <button className='btn'  ><Link to='/teacher'>Teacher Management</Link></button >
                     <button className='btn'  ><Link to='/course'>Course Management</Link></button >
                     <button className='btn'  ><Link to='/subject'>Subject Management</Link></button >
+
                        
                    <button className='btn'><NavDropdown title="Shedule Management" id="collasible-nav-dropdown">
-                    {course.map((obj,index)=>
+                    {/* {course.map((obj,index)=>
                     <div key={index} >
                      <NavDropdown.Item ><Link to='/plusone' state={{value:obj.coursename}}>{obj.coursename}</Link> </NavDropdown.Item>
 
                      </div>
                     
                       
+                    )}  */}
+
+                     {course.map((obj,index)=>
+                    <div key={index} >
+                     <NavDropdown.Item ><button className='btn' onClick={()=>hadleSchedule(obj._id)}>{obj.coursename}</button> </NavDropdown.Item>
+
+                     </div>
+                    
+                      
                     )} 
 
+
+           {/* {course.map((obj,index)=>
+                    <div key={index} >
+                     <NavDropdown.Item ><Link to='/plusone' onClick={onClick} value={data} ></Link> </NavDropdown.Item>
+
+                     </div>
+                    
+                      
+                    )}  */}
               {/* <NavDropdown.Item ><Link to='/plusone'>Plus One</Link> </NavDropdown.Item>
               <NavDropdown.Item >Plus Two </NavDropdown.Item>
               <NavDropdown.Item >Crash Course </NavDropdown.Item>

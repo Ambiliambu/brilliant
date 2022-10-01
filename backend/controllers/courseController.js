@@ -1,6 +1,6 @@
 
 const asynchandler=require('express-async-handler')
-const {Course}=require('../models/adminModel')
+const {Course }=require('../models/adminModel')
 
 
 
@@ -145,12 +145,28 @@ const getCourse =asynchandler(async (req, res) => {
     res.status(200).json(updatecourse)
   })
 
+//get course by name
 
+const accessCourse =asynchandler(async (req, res) => {
+  const coursename=req.query.course;
+  // console.log("ttiiiit",typeof coursename);
+
+    try {
+      
+      const course= await  Course.findOne({coursename:coursename})
+      console.log("iii");
+      // console.log("qqqqqqqq",course);
+      res.status(200).json(course);
+    } catch (error) {
+      res.json(error);
+    }
+  });
 
 module.exports={
     addCourse,
     getCourses,
     deleteCourse,
     getCourse ,
-    editCourse
+    editCourse,
+    accessCourse
 }

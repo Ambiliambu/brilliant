@@ -15,13 +15,12 @@ const addTeacher=asynchandler(async(req,res)=>{
         throw new ('Please add all field')
     }
     //check course and subject 
-      const courseExist=await Teacher.findOne({course})
-      if(courseExist){
-        const subjectExist=await Teacher.findOne({subject})
-        if(subjectExist){
+      const Exist=await Teacher.findOne({$and:[{course:course},{subject:subject}]})
+      if(Exist){
+        
            res.status(400)
            throw new Error( 'it already exists ')
-        }
+       
       }
      
 
@@ -31,6 +30,9 @@ const addTeacher=asynchandler(async(req,res)=>{
         res.status(400)    
         throw new Error('Already exist')
     }
+    // check it same subject for same course
+
+
      
     //hash password
     const salt=await bcrypt.genSalt(10)
@@ -138,7 +140,7 @@ const deleteteacher=await Teacher.findById(Id)
 
 
 
-//get a teacher
+//get a teacher with id
 
 const getTeacher =asynchandler(async (req, res) => {
     try {
@@ -148,7 +150,19 @@ const getTeacher =asynchandler(async (req, res) => {
       res.json(error);
     }
   });
+  // get teacher with course
 
+const courseTeacher =asynchandler(async (req, res) => {
+  const course=req.query.course
+  console.log("cou",course);
+    try {
+      const teacher = await Teacher.find({course});
+      console.log("kk",teacher);
+      res.status(200).json(teacher);
+    } catch (error) {
+      res.json(error);
+    }
+  });
 
   // edit teacher
 
@@ -196,5 +210,6 @@ module.exports={
     deleteTeacher,
     getTeacher ,
     editTeacher,
-    loginTeacher
+    loginTeacher,
+    courseTeacher
  }

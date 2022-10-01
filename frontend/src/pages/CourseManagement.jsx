@@ -68,6 +68,7 @@ async function deleteCourse(rowId){
         id:Id,},
     config });
     setrefresh(!refresh)
+    
 
   } catch (error) {
     throw new error(error.response.data.message)

@@ -49,6 +49,7 @@ const addSubject=asynchandler(async(req,res)=>{
  const getSubjects=asynchandler(async(req,res)=>{
     try {
         const subjects=await Subject.find({})
+        // console.log("oo",subjects);
         res.json(subjects)
         
     } catch (error) {

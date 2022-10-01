@@ -50,11 +50,14 @@ function App() {
       <Route path='/teacherlogin' element={<TeacherLogin/>}/>
       <Route path='/studentpage' element={<StudentPage/>}/>
       {/* <Route path='/plusone' element={<ScheduleScreen/>}/> */}
-      <Route path='/plusone' element={<Plusone/>}/>
+      {/* <Route path='/plusone' element={<Plusone/>}/>
+       */}
+       
+      <Route path='/schedule/:courseId' element={<Plusone/>}/>
 
 
 
-      <Route path='/plusoneschedule' element={<AddSchedule/>}/>
+      <Route path='/addschedule/:courseId' element={<AddSchedule/>}/>
 
 
 

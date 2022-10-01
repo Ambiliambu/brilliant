@@ -110,6 +110,8 @@ const transactionSchema=mongoose.Schema({
 const User= mongoose.model("User",userSchema)
 const Student=mongoose.model("Student",studentSchema)
 const Transaction =mongoose.model("Transaction",transactionSchema)
+
+
 module.exports= {User,Student,Transaction}
 
 
