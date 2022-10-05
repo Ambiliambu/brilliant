@@ -68,8 +68,23 @@ const approveStudent=asynchandler(async(req,res)=>{
   }
 })
 
+//get students
+const getStudents=asynchandler(async(req,res)=>{
+    try {
+        const students=await Student.find({})
+        // console.log("tt",students);
+        res.json(students)
+        
+    } catch (error) {
+        res.json("error is occured when getting students")
+    }
+})
+
+
+
 module.exports={
     approveStudent,
     registerStudent,
+    getStudents
    
 }

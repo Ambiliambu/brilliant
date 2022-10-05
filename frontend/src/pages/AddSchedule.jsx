@@ -14,11 +14,14 @@ import {toast} from 'react-toastify'
 
 function AddSchedule() {
 
-  const location = useLocation();
-  const course = location.state.course;
+  // const location = useLocation();
+  // const course = location.state.course;
   const courseId=useParams();
-  console.log("idkk",courseId );
-  
+  // console.log("idkk",courseId );
+  const [course,setCourse]=useState('')
+  console.log("fgfg",course);
+
+
   const navigate=useNavigate()
   const [mstarttime, setStarttimem] = useState('');
   const [mendtime, setEndtimem] = useState('');
@@ -74,9 +77,17 @@ function AddSchedule() {
 
           }
         }
+        console.log("ppp",courseId);
+        const  coursedetails  = await axios.get(`/api/admins/editcourse/${courseId.courseId}`,config);
+         setCourse(coursedetails.data)
+        console.log("cod",coursedetails.data);
+
+       console.log("course.coursename",coursedetails.data.coursename);
+       const cname=coursedetails.data.coursename
+
         const {data}=await axios.get('/api/admins/courseteacher',
         {params:{
-          course:course
+          course: cname
         }
       },
         config)
@@ -122,48 +133,51 @@ function AddSchedule() {
               }
     
                
-    
+         console.log("oooo");
               const {data}=await axios.post('/api/admins/addschedule',
-              [{ 
+              { 
                 mday,
                 mstarttime,
                 mendtime,
                 msubject,
-                mteacher},
-                {tuday,
+                mteacher,
+                tuday,
                 tustarttime,
                 tuendtime,
                 tusubject,
-                tuteacher},
-                {wday,
+                tuteacher,
+                wday,
                 wstarttime,
                 wendtime,
                 wsubject,
-                wteacher},
-                {thday,
+                wteacher,
+                thday,
                 thstarttime,
                 thendtime,
                 thsubject,
-                thteacher},
-                {fday,
+                thteacher,
+                fday,
                   fstarttime,
                   fendtime,
                   fsubject,
-                  fteacher},
-                {sday,
+                  fteacher,
+                sday,
                 sstarttime,
                 sendtime,
                 ssubject,
-                steacher} ,
-                {
-                  course
+                steacher ,
+                
+                  course:course.coursename
                 }
-              ]
+              
   
                     
                ,config)
 
         //  localStorage.setItem('schedule',JSON.stringify(data))
+        
+        navigate(`/schedule/${courseId.courseId}`)
+
          
 
               console.log("ooo",data)
@@ -199,7 +213,7 @@ function AddSchedule() {
                 <div className="row 	appearance: none;
 ">
                   <div className='col-12 col-md-6'>
-                    <label >Course : <b>{course}</b></label>
+                    <label >Course : <b>{course.coursename}</b></label>
 
                   </div>
                 </div>

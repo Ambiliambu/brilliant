@@ -107,7 +107,7 @@ const teacherSchema=mongoose.Schema({
 })
 
 //schedule
-const scheduleSchema=mongoose.Schema([{
+const scheduleSchema=mongoose.Schema({
    
         mday:{
             type:String,
@@ -121,11 +121,7 @@ const scheduleSchema=mongoose.Schema([{
             type:String,
             required:[true,"Please add end time"]
         },
-        // course:{     
-        //     type:String,     
-        //     required:true
-    
-        // },
+      
         msubject:{
             type:String,
             required:[true,'Please add subject']
@@ -134,9 +130,9 @@ const scheduleSchema=mongoose.Schema([{
         mteacher:{
             type:String,
             required:[true,'please add teacher']
-        }
+        },
        
-    },{
+  
         tuday:{
             type:String,
             required:[true,'Please add an day']
@@ -149,11 +145,7 @@ const scheduleSchema=mongoose.Schema([{
             type:String,
             required:[true,"Please add end time"]
         },
-        // course:{     
-        //     type:String,     
-        //     required:true
-    
-        // },
+        
         tusubject:{
             type:String,
             required:[true,'Please add subject']
@@ -162,8 +154,8 @@ const scheduleSchema=mongoose.Schema([{
         tuteacher:{
             type:String,
             required:[true,'please add teacher']
-        }
-    },{
+        },
+   
         wday:{
             type:String,
             required:[true,'Please add an day']
@@ -176,11 +168,7 @@ const scheduleSchema=mongoose.Schema([{
             type:String,
             required:[true,"Please add end time"]
         },
-        // course:{     
-        //     type:String,     
-        //     required:true
-    
-        // },
+        
         wsubject:{
             type:String,
             required:[true,'Please add subject']
@@ -189,8 +177,8 @@ const scheduleSchema=mongoose.Schema([{
         wteacher:{
             type:String,
             required:[true,'please add teacher']
-        }
-    },{
+        },
+    
         thday:{
             type:String,
             required:[true,'Please add an day']
@@ -203,11 +191,7 @@ const scheduleSchema=mongoose.Schema([{
             type:String,
             required:[true,"Please add end time"]
         },
-        // course:{     
-        //     type:String,     
-        //     required:true
-    
-        // },
+        
         thsubject:{
             type:String,
             required:[true,'Please add subject']
@@ -216,8 +200,8 @@ const scheduleSchema=mongoose.Schema([{
         thteacher:{
             type:String,
             required:[true,'please add teacher']
-        }
-    },{
+        },
+   
         fday:{
             type:String,
             required:[true,'Please add an day']
@@ -230,11 +214,7 @@ const scheduleSchema=mongoose.Schema([{
             type:String,
             required:[true,"Please add end time"]
         },
-        // course:{     
-        //     type:String,     
-        //     required:true
-    
-        // },
+                          
         fsubject:{
             type:String,
             required:[true,'Please add subject']
@@ -243,8 +223,8 @@ const scheduleSchema=mongoose.Schema([{
         fteacher:{
             type:String,
             required:[true,'please add teacher']
-        }
-    },{
+        },
+   
         sday:{
             type:String,
             required:[true,'Please add an day']
@@ -257,11 +237,7 @@ const scheduleSchema=mongoose.Schema([{
             type:String,
             required:[true,"Please add end time"]
         },
-        // course:{     
-        //     type:String,     
-        //     required:true
-    
-        // },
+       
         ssubject:{
             type:String,
             required:[true,'Please add subject']
@@ -270,9 +246,8 @@ const scheduleSchema=mongoose.Schema([{
         steacher:{
             type:String,
             required:[true,'please add teacher']
-        }
-    },
-    {
+        },
+    
     course:{     
             type:String,     
             required:true
@@ -281,7 +256,7 @@ const scheduleSchema=mongoose.Schema([{
     }
     
 
-],{
+,{
     
 
     timestamps:true

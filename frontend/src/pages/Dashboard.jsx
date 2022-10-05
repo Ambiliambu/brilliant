@@ -93,7 +93,7 @@ function Dashboard() {
 
         <div className=' row justify-content-between' >
           <div className='mt-5 col-12 col-md-6'>
-        <h3 style={{fontWeight:"500",color:"lightskyblue"}}>About Brilliant</h3>
+        <h3 style={{fontWeight:"500",color:"lightskyblue"}}>About Brilliant </h3>
 
             <p className="description mt-4  text-secondary">Brilliant was founded to offer life-changing tuition for all,<br/> and this  mission makes us excited to get up and come to<br/> work everyday.
               We’re proud that our network of tutors  <br/> supports pupils from all walks of life.</p>

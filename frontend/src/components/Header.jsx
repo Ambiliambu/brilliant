@@ -62,7 +62,7 @@ function handleSubmit2(){
                     <Nav className="m-auto">
                         {user ? (<>
                     <button className='btn' ><Link to='/'>Home</Link></button>
-                    <button className='btn'>About Us</button>
+                    <button className='btn'><Link to='/about'>About Us</Link></button>
                     <button className='btn'>Gallery</button>
                     
                     <button className='btn'>{user.isStudent ? <Link to='/studentpage'>Student</Link> : <Link to='/registration'>Student</Link>}</button>
@@ -70,7 +70,7 @@ function handleSubmit2(){
 
                         </>) :(<>
                     <button  className='btn'><Link to='/'>Home</Link></button>
-                    <button className='btn' >About Us</button>
+                    <button className='btn' ><Link to='/about'>About Us</Link></button>
                     <button className='btn'>Gallery</button>
                     {/* <Nav.Link ><Link to='/login'>A Student +</Link></Nav.Link> */}
                     <button  className='btn' onClick={handleShow1}>A Student +</button>

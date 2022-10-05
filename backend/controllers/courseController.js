@@ -101,6 +101,7 @@ const deletecourse=await Course.findById(Id)
 //get course
 
 const getCourse =asynchandler(async (req, res) => {
+  console.log("ppid",req.params.courseId);
     try {
       const course = await Course.findById(req.params.courseId);
       res.status(200).json(course);

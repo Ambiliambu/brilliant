@@ -54,7 +54,7 @@ function handleSubmit(){
                     <Nav className="m-auto">
                     
                     <button className='btn' ><Link to='/'>Home</Link></button>
-                    <button className='btn'>About Us</button>
+                    <button className='btn'><Link to='/about'>About Us</Link></button>
                     <button className='btn'>Gallery </button>
                     <button className='btn'><Link to='/teacherpage'>Teacher</Link></button>  
                    

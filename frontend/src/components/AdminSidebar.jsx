@@ -78,7 +78,7 @@ function AdminSidebar() {
                 <Navbar.Collapse id="navbarScroll">
                     <Nav className="m-auto">
                         
-                    <button className='btn' >Student Management</button >
+                    <button className='btn' ><Link to='/student'>Student Management</Link></button >
                     <button className='btn'  ><Link to='/teacher'>Teacher Management</Link></button >
                     <button className='btn'  ><Link to='/course'>Course Management</Link></button >
                     <button className='btn'  ><Link to='/subject'>Subject Management</Link></button >
@@ -96,7 +96,7 @@ function AdminSidebar() {
 
                      {course.map((obj,index)=>
                     <div key={index} >
-                     <NavDropdown.Item ><button className='btn' onClick={()=>hadleSchedule(obj._id)}>{obj.coursename}</button> </NavDropdown.Item>
+                     <NavDropdown.Item onClick={()=>hadleSchedule(obj._id)}>{obj.coursename} </NavDropdown.Item>
 
                      </div>
                     

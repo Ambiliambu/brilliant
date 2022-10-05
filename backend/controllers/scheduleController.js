@@ -1,5 +1,5 @@
 const asynchandler=require('express-async-handler')
-const {Schedule, Teacher}=require('../models/adminModel')
+const {Schedule, Teacher, Course}=require('../models/adminModel')
 
 
 
@@ -7,18 +7,9 @@ const {Schedule, Teacher}=require('../models/adminModel')
 
 const addSchedule=asynchandler(async(req,res)=>{
 
-    // const [{mday, mstarttime,mendtime,msubject,mteacher},{tuday,tustarttime,tuendtime,tusubject,tuteacher},
-    // {wday, wstarttime,wendtime,wsubject,wteacher},{thday, thstarttime,thendtime,thsubject,thteacher},
-    //   {fday, fstarttime,fendtime,fsubject,fteacher},{sday, sstarttime,sendtime,ssubject,steacher}]=req.body
-    
-    const [{mday, mstarttime,mendtime,msubject,mteacher},{tuday,tustarttime,tuendtime,tusubject,tuteacher},
-      {wday, wstarttime,wendtime,wsubject,wteacher},{thday, thstarttime,thendtime,thsubject,thteacher},
-      {fday, fstarttime,fendtime,fsubject,fteacher},{sday, sstarttime,sendtime,ssubject,steacher},{course}]=req.body
-
-
-
-
-
+    const {mday, mstarttime,mendtime,msubject,mteacher,tuday,tustarttime,tuendtime,tusubject,tuteacher,
+      wday, wstarttime,wendtime,wsubject,wteacher,thday, thstarttime,thendtime,thsubject,thteacher,
+      fday, fstarttime,fendtime,fsubject,fteacher,sday, sstarttime,sendtime,ssubject,steacher,course}=req.body
 
     console.log("ggg",req.body,mendtime,tuendtime,wendtime,thendtime,fendtime,sendtime,course)
     
@@ -35,11 +26,11 @@ const addSchedule=asynchandler(async(req,res)=>{
   //  const subjectm=await Teacher.find({$and:[{course:course},{subject:{$in:[msubject,tusubject,wsubject,thsubject,fsubject,ssubject]}}]})
   //  console.log("oo",subjectm);
 
- 
+  // const course= await Course.findById(Id);
+  // const cname=course.coursename
 
 
 
- 
 
   const subjectm =await Teacher.findOne({$and:[{name:mteacher},{course:course},{subject:msubject}]})
   const subjecttu =await Teacher.findOne({$and:[{name:tuteacher},{subject:tusubject},{course:course}]})
@@ -168,7 +159,7 @@ if(!subjectm || !subjecttu || !subjectw || !subjectth || !subjectf || !subjects)
  const getSchedules=asynchandler(async(req,res)=>{
     try {
         const schedules=await Schedule.find({})
-        console.log("tt",schedules);
+        // console.log("tt",schedules);
         res.json(schedules)
         
     } catch (error) {
@@ -191,15 +182,15 @@ const deleteschedule=await Schedule.findById(Id)
       res.status(400)
       throw new Error('Schedule not found')
     }
-    console.log("hhhhj");
   
     // Check for admin*
     // if (!req.admin) {
     //   res.status(401)
     //   throw new Error('admin not found')
     // }
-  console.log("hhhhj");
+  console.log("delej");
    const data= await deleteschedule.remove()
+   console.log("gdetlte");
   
     res.status(200).json({  deletescheduleId:data._id })
   })
@@ -210,19 +201,38 @@ const deleteschedule=await Schedule.findById(Id)
 // //get schedule
 
 const getSchedule =asynchandler(async (req, res) => {
-  const course=req.query.course;
-  console.log("ttt",course);
+  const Id=req.params.courseId;
+  console.log("ttt",Id);
     try {
-      const schedule= await Schedule.find({course});
-      
-      console.log("qqq",schedule);
+      const course= await Course.findById(Id);
+      const cname=course.coursename
+
+      const schedule= await Schedule.findOne({course:cname});
+      // console.log("qqq",schedule);
       res.status(200).json(schedule);
     } catch (error) {
       res.json(error);
     }
   });
 
- 
+  const accessSchedule =asynchandler(async (req, res) => {
+    const email=req.query.email;
+  //  console.log("em",email);
+      try {
+        const teacher= await Teacher.findOne({email:email});
+    // console.log("oo",teacher);
+  
+        const schedule= await Schedule.findOne({course:teacher.course})
+
+
+         
+        // console.log("qqq",schedule);
+        res.status(200).json(schedule);
+      } catch (error) {
+        res.json(error);
+      }
+    });
+
 
 
 
@@ -231,4 +241,6 @@ module.exports={
     getSchedules,
     deleteSchedule,
     getSchedule,
+    accessSchedule
+
 }

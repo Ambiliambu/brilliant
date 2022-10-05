@@ -6,16 +6,14 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar'
 import './Form.scss'
-import Navbar from '../components/Sidebar';
 
 
-function TeacherManagement() {
+function StudentManagement() {
 
     const [show,setShow]=useState(false)
-  const [teacher,setTeacher]=useState([])
+  const [student,setStudent]=useState([])
   const [refresh, setrefresh] = useState(false);
- const [deleteId,setdeleteId]=useState('')
- const [editId,seteditId]=useState('')
+//  const [deleteId,setdeleteId]=useState('')
 
  const navigate=useNavigate()
 
@@ -34,10 +32,10 @@ useEffect(()=>{
 
         }
       }
-      const data=await axios.get('/api/admins/getteachers',config)
+      const data=await axios.get('/api/admins/getstudents',config)
 
-      setTeacher(data.data)
-      console.log("teacher data",data.data);
+      setStudent(data.data)
+      console.log("student data",data.data);
     } catch (error) {
       console.error(error)
     }
@@ -48,63 +46,22 @@ useEffect(()=>{
 },[refresh,navigate])
 
 
-function handleDelete (Id){
-  setShow(true)
-  setdeleteId(Id)
 
-   
-} 
 
 const handleClose = () => setShow(false);
 
-async function deleteTeacher(rowId){
-  handleClose();
-  console.log("kj",rowId.deleteId);
-  const Id=rowId.deleteId;
-  try {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      }
-    }
-    console.log("jhj");
-    await axios.delete('/api/admins/deleteteacher',{
-      params:{
-        id:Id,},
-    config });
-    setrefresh(!refresh)
-
-  } catch (error) {
-    throw new error(error.response.data.message)
-  }
-}
-
-const addTeacher=async()=>{
-  try{
-    navigate('/addteacher')
-  }catch(error){
-    throw new error(error.response.data.message)
-  }
-}
 
 
 
 
-const editTeacher=async(teacherId)=>{
 
-  try {
-    navigate(`/editteacher/${teacherId}`)
-  } catch (error) {
-    throw new error(error.response.data.message)
-    
-  }
-}
+
 
 
     const columnss = [
 
         {
-          name: "Teacher Name",
+          name: "Student Name",
           cell: (row) =>row.name
         
         },
@@ -113,6 +70,16 @@ const editTeacher=async(teacherId)=>{
           selector: (row) => row.email,
           sortable: true,
         },
+        {
+            name: "Parent's name",
+            selector: (row) => row.parentsname,
+            sortable: true,
+          },
+        {
+            name: "Parent's Number",
+            selector: (row) => row.parentsnumber,
+            sortable: true,
+          },
         {
           name: "Phone Number",
           selector: (row) => row.phonenumber,
@@ -123,11 +90,7 @@ const editTeacher=async(teacherId)=>{
           selector: (row) => row.course,
           sortable: true,
         },
-        {
-          name: "Subject",
-          selector: (row) => row.subject,
-          sortable: true,
-        },
+     
         
         // {
         //   name: "Delete",
@@ -145,22 +108,7 @@ const editTeacher=async(teacherId)=>{
          
         // },
        
-        {
-          name: "Delete",
-          cell: (row) => (
-            <Button className='btn-danger'
-              onClick={()=>{
-                handleDelete(row._id);
-              }}
-            >
-              Delete
-            </Button>
-            
-          ),
-
-         
-        },
-        
+      
         
     ]
   return (
@@ -189,11 +137,7 @@ const editTeacher=async(teacherId)=>{
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-              <Button variant="primary" 
-              onClick={()=>{
-                 deleteTeacher({deleteId})
-              }} 
-              >Delete</Button>
+             
             </Modal.Footer>
           </Modal>
 
@@ -201,15 +145,13 @@ const editTeacher=async(teacherId)=>{
 
          
 
-        <Button className='addbutton m-2 btn-success' 
-        onClick={addTeacher}
-        >ADD +</Button>
+        
 
           <div className="shadow p-3 mb-5 bg-white rounded ">
             <DataTable
-              title="Teacher Details"
+              title="Student Details"
               columns={columnss}
-              data={teacher}
+              data={student}
               pagination
               fixedHeader
               highlightOnHover
@@ -223,4 +165,4 @@ const editTeacher=async(teacherId)=>{
   )
 }
 
-export default TeacherManagement
+export default StudentManagement

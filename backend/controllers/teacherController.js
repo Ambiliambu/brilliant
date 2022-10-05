@@ -143,6 +143,8 @@ const deleteteacher=await Teacher.findById(Id)
 //get a teacher with id
 
 const getTeacher =asynchandler(async (req, res) => {
+  console.log("id",req.params.teacherId);
+  
     try {
       const teacher = await Teacher.findById(req.params.teacherId);
       res.status(200).json(teacher);

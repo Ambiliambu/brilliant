@@ -24,6 +24,8 @@ import AddSchedule from './pages/AddSchedule'
 import SubjectManagement from './pages/SubjectManagement'
 import AddSubject from './pages/AddSubject/AddSubject'
 import Plusone from './components/Schedule.js/Plusone'
+import StudentManagement from './pages/StudentManagement'
+import About from './pages/About'
 function App() {
   return (
   
@@ -40,6 +42,10 @@ function App() {
       <Route path='/admin' element={<AdminLogin/>}/>
       <Route path='/admindashboard' element={<AdminDashboard/>} />
 
+      <Route path='/about' element={<About/>}/>
+     
+
+
       <Route path='/course' element={<CourseManagement/>}/>
       <Route path='/addcourse' element={<AddCourse/>}/>
       <Route path='/editcourse/:courseId' element={<EditCourse/>}/>
@@ -54,12 +60,10 @@ function App() {
        */}
        
       <Route path='/schedule/:courseId' element={<Plusone/>}/>
-
-
-
       <Route path='/addschedule/:courseId' element={<AddSchedule/>}/>
 
-
+      <Route path='/student' element={<StudentManagement/>}/>
+      
 
       <Route path='/subject' element={<SubjectManagement/>}/>
       <Route path='/addsubject' element={<AddSubject/>}/>
