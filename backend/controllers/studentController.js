@@ -80,11 +80,40 @@ const getStudents=asynchandler(async(req,res)=>{
     }
 })
 
+//update student
+
+const updateStudent=asynchandler(async(req,res)=>{
+console.log("id",req.params.Id);
+
+const stu=await Student.findById(req.params.Id)
+console.log("ll",stu);
+if(stu.status===true)
+
+    try{
+        const updatestu=await Student.findByIdAndUpdate(req.params.Id,{"status":false},{new:true})
+        console.log("u",updatestu);
+        res.json(updatestu)
+    }catch(error){
+        res.json("error is occured when getting students")
+    }
+else{
+        try{
+            const updatestu=await Student.findByIdAndUpdate(req.params.Id,{"status":true},{new:true})
+            console.log("u",updatestu);
+            res.json(updatestu)
+        }catch(error){
+            res.json("error is occured when getting students")
+        }
+    }
+
+})
+
 
 
 module.exports={
     approveStudent,
     registerStudent,
-    getStudents
+    getStudents,
+     updateStudent
    
 }

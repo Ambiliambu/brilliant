@@ -1,6 +1,6 @@
 const express=require('express')
 const { createOrder,verifyPayment } = require('../controllers/paymentController')
-const { registerStudent,approveStudent } = require('../controllers/studentController')
+const { registerStudent,approveStudent, updateStudent } = require('../controllers/studentController')
 const { loginTeacher } = require('../controllers/teacherController')
 const router= express.Router()
 const {getUser,
@@ -23,6 +23,7 @@ router.patch('/acceptstudent',acceptStudent)
 
 router.post('/student',registerStudent)
 router.patch('/approvestudent',approveStudent)
+
 
 
 // router.route('/').get(getUsers).post(setUser)

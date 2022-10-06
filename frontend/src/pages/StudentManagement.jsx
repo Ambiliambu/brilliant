@@ -51,7 +51,14 @@ useEffect(()=>{
 const handleClose = () => setShow(false);
 
 
+// async function handleBlock(Id){
+//   console.log("Id",Id);
+//  const {data}=await axios.patch(`/api/admins/updatestudent/${Id}`)
+//  console.log("pppp",data);
+  
 
+  
+// }
 
 
 
@@ -93,11 +100,11 @@ const handleClose = () => setShow(false);
      
         
         // {
-        //   name: "Delete",
+        //   name: "Action",
         //   cell: (row) => (
         //     <Button className='btn-danger'
         //       onClick={()=>{
-        //         // handleDelete(row._id);
+        //         handleBlock(row._id);
         //       }}
         //     >
         //       Block

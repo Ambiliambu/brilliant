@@ -6,7 +6,7 @@ const {getAdmin,
 }=require('../controllers/adminController')
 const { addCourse, getCourses ,deleteCourse,getCourse ,editCourse, acessCourse, accessCourse} = require('../controllers/courseController')
 const { addSchedule, getSchedules, deleteSchedule, getSchedule, accessSchedule } = require('../controllers/scheduleController')
-const { getStudents } = require('../controllers/studentController')
+const { getStudents, updateStudent } = require('../controllers/studentController')
 const { addSubject, getSubjects, deleteSubject, getSubject } = require('../controllers/subjectController')
 const { addTeacher, getTeachers, getTeacher, deleteTeacher, editTeacher, courseTeacher } = require('../controllers/teacherController')
 const {adminprotect}=require('../middleware/authMiddleware')
@@ -50,7 +50,7 @@ router.get('/accessschedule',accessSchedule)
 
 
 router.get('/getstudents',getStudents)
-
+router.patch('/updatestudent/:Id', updateStudent)
 
 
 

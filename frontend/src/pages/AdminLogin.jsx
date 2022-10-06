@@ -35,7 +35,7 @@ function AdminLogin() {
         }
   
         if(isSucess || admin){
-          navigate('/admindashboard')
+          navigate('/student')
         }
   
         dispatch(reset())
