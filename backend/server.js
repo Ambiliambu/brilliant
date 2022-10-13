@@ -4,10 +4,11 @@ const port=process.env.PORT || 5000
 const {errorHandler}=require('./middleware/errorMiddleware')
 const connectDB=require('./config/db')
 const app=express()
-
+const fileUpload=require('express-fileupload')
 connectDB()
 
 //
+app.use(fileUpload());
 const cors = require('cors')
 
 app.use(cors())

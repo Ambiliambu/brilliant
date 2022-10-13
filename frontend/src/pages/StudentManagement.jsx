@@ -14,7 +14,7 @@ function StudentManagement() {
   const [student,setStudent]=useState([])
   const [refresh, setrefresh] = useState(false);
 //  const [deleteId,setdeleteId]=useState('')
-
+// const [data,setData]=useState('')
  const navigate=useNavigate()
 
 
@@ -51,14 +51,13 @@ useEffect(()=>{
 const handleClose = () => setShow(false);
 
 
-// async function handleBlock(Id){
-//   console.log("Id",Id);
-//  const {data}=await axios.patch(`/api/admins/updatestudent/${Id}`)
-//  console.log("pppp",data);
+async function handleBlock(Id){
+  console.log("Id",Id);
+ const {data}=await axios.patch(`/api/admins/updatestudent/${Id}`)
+ console.log("pppp",data);
+//  setData(data)
   
-
-  
-// }
+}
 
 
 
@@ -96,27 +95,21 @@ const handleClose = () => setShow(false);
           name: "Course",
           selector: (row) => row.course,
           sortable: true,
-        },
-     
-        
-        // {
-        //   name: "Action",
-        //   cell: (row) => (
-        //     <Button className='btn-danger'
-        //       onClick={()=>{
-        //         handleBlock(row._id);
-        //       }}
-        //     >
-        //       Block
-        //     </Button>
+        }, 
+        {
+          name: "Action",
+          cell: (row) => (
             
-        //   ),
-
-         
-        // },
-       
-      
-        
+            <Button className='btn-danger'
+              onClick={()=>{
+                handleBlock(row._id);
+              }}
+            >
+              Block
+            </Button>
+            
+          ),       
+        },    
     ]
   return (
     <div>

@@ -56,7 +56,10 @@ function handleSubmit(){
                     <button className='btn' ><Link to='/'>Home</Link></button>
                     <button className='btn'><Link to='/about'>About Us</Link></button>
                     <button className='btn'>Gallery </button>
-                    <button className='btn'><Link to='/teacherpage'>Teacher</Link></button>  
+                   {teacher.isTeacher===true ? ( <><button className='btn'><Link to='/teacherpage'>Teacher</Link></button> 
+                    <button className='btn'><Link to='/task'>Task</Link></button></>) :(<></>)} 
+                    
+
                    
                     </Nav>
 

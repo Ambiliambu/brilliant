@@ -2,16 +2,19 @@ import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
 import TeacherHeader from '../components/TeacherHeader'
 
 function Teacherpage() {
-const teacher=JSON.parse(localStorage.getItem('teacher'))
-  console.log("tes",teacher);
 
+const navigate=useNavigate()
 const [teacherdata,setTeacher]=useState('')
 const [schedule,setSchedule]=useState('')
     useEffect(()=>{
+      const teacher=JSON.parse(localStorage.getItem('teacher'))
+  console.log("tes",teacher);
+      if(teacher){
       (async function(){
         try{
           const config = {
@@ -35,6 +38,9 @@ const [schedule,setSchedule]=useState('')
   
         }
       })();
+    }else{
+      navigate('/')
+    }
     },[])
 
   return (

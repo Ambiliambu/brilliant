@@ -26,6 +26,11 @@ import AddSubject from './pages/AddSubject/AddSubject'
 import Plusone from './components/Schedule.js/Plusone'
 import StudentManagement from './pages/StudentManagement'
 import About from './pages/About'
+import Task from './pages/Task'
+import AddTask from './pages/AddTask/AddTask'
+import StudentTask from './pages/StudentTask'
+import PaymentManagement from './pages/PaymentManagement'
+
 function App() {
   return (
   
@@ -58,12 +63,18 @@ function App() {
       {/* <Route path='/plusone' element={<ScheduleScreen/>}/> */}
       {/* <Route path='/plusone' element={<Plusone/>}/>
        */}
+       <Route path='/task' element={<Task/>}/>
+       <Route path='/addtask' element={<AddTask/>}/>
+       <Route path='/addtask' element={<AddTask/>}/>
+      <Route path='/studenttask' element={<StudentTask/>}/>
+
+
        
       <Route path='/schedule/:courseId' element={<Plusone/>}/>
       <Route path='/addschedule/:courseId' element={<AddSchedule/>}/>
-
-      <Route path='/student' element={<StudentManagement/>}/>
       
+      <Route path='/student' element={<StudentManagement/>}/>
+      <Route path='payment' element={<PaymentManagement/>}/>
 
       <Route path='/subject' element={<SubjectManagement/>}/>
       <Route path='/addsubject' element={<AddSubject/>}/>

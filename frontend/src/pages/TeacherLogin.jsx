@@ -34,12 +34,15 @@ function TeacherLogin() {
 
     }
     if(isSuccess && teacher){
-      if(teacher.isTeacher){
+      if(teacher.isTeacher===true){
         navigate('/teacherpage')
       }
-    // else{
-    //   navigate('/')
+    else{
+      navigate('/')
+      toast.error("ooo") 
+
     }
+  }
   
     
 

@@ -1,7 +1,7 @@
 const express=require('express')
 const { createOrder,verifyPayment } = require('../controllers/paymentController')
 const { registerStudent,approveStudent, updateStudent } = require('../controllers/studentController')
-const { loginTeacher } = require('../controllers/teacherController')
+const { loginTeacher,  addTask, getTask, getTasks } = require('../controllers/teacherController')
 const router= express.Router()
 const {getUser,
     registerUser,
@@ -30,6 +30,12 @@ router.patch('/approvestudent',approveStudent)
 
 router.post('/razorpay',createOrder)
 router.post('/verifypayment',verifyPayment)
+
+
+router.post('/addtask',addTask)
+router.get('/gettask/:teacherId',getTask)
+router.get('/gettasks/:course',getTasks)
+
 
 module.exports=router
 

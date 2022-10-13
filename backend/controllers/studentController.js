@@ -1,5 +1,5 @@
 const asynchandler=require('express-async-handler')
-const {Student}=require('../models/userModel')
+const {Student, User}=require('../models/userModel')
 
 
 //register a student
@@ -82,31 +82,36 @@ const getStudents=asynchandler(async(req,res)=>{
 
 //update student
 
-const updateStudent=asynchandler(async(req,res)=>{
+const updateStudent=async(req,res)=>{
 console.log("id",req.params.Id);
 
 const stu=await Student.findById(req.params.Id)
-console.log("ll",stu);
-if(stu.status===true)
+const userId=stu.userId.toString()
+const user=await User.findById(userId)
 
+if(user.isStudent===true)
     try{
-        const updatestu=await Student.findByIdAndUpdate(req.params.Id,{"status":false},{new:true})
-        console.log("u",updatestu);
-        res.json(updatestu)
+        
+        const updateuser=await User.findByIdAndUpdate(userId,{"isStudent":false},{new:true})
+        // const updatestudent=await Student.findByIdAndUpdate(req.params.Id,{"status":false},{new:true})
+
+        console.log("uii",updateuser);
+        res.status(200).json(updateuser)
     }catch(error){
-        res.json("error is occured when getting students")
+        res.status(400).json(error)
     }
 else{
         try{
-            const updatestu=await Student.findByIdAndUpdate(req.params.Id,{"status":true},{new:true})
-            console.log("u",updatestu);
-            res.json(updatestu)
+            const updateuser=await User.findByIdAndUpdate(userId,{"isStudent":true},{new:true})
+
+            console.log("u",updateuser);
+            res.status(200).json(updateuser)
         }catch(error){
-            res.json("error is occured when getting students")
+            res.status(400).json(error)
         }
     }
 
-})
+}
 
 
 

@@ -44,7 +44,13 @@ console.log("ppp",student);
   return (
 
  
+    // import ModalImage from "react-modal-image";
 
+    // <ModalImage
+    //   small={urlToTinyImageFile}
+    //   large={urlToHugeImageFile}
+    //   alt="Hello World!"
+    // />;
 
 
 

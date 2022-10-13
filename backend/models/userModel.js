@@ -107,14 +107,47 @@ const transactionSchema=mongoose.Schema({
 },{
         timestamps:true
     })
+
+    const taskSchema=mongoose.Schema({
+        teacher:{
+            type:String,
+            required:true
+        },
+        course:{
+            type:String,
+            required:true,
+        },
+        subject:{
+            type:String,
+            required:true
+        }, 
+        startDate:{
+            type:String,
+            required:true
+        },
+        endDate:{
+            type:String,
+            required:true
+        },
+        task:{
+            type:String,
+            required:true
+        }
+        
+    
+    },{
+        timestamps:true
+    })
+
+
 const User= mongoose.model("User",userSchema)
 const Student=mongoose.model("Student",studentSchema)
 const Transaction =mongoose.model("Transaction",transactionSchema)
+const Task=mongoose.model('Task',taskSchema)
+
+module.exports= {User,Student,Transaction,Task}
 
 
-module.exports= {User,Student,Transaction}
 
-
-
-
+ 
 

@@ -1,6 +1,7 @@
 const asynchandler=require('express-async-handler')
 const {Teacher}=require('../models/adminModel')
 const bcrypt=require('bcryptjs')
+const { Task } = require('../models/userModel')
 
 
 
@@ -69,19 +70,19 @@ const addTeacher=asynchandler(async(req,res)=>{
         })
     }else{
         res.status(400)
-        throw new Error('nvalid credentials')
+        throw new Error('Invalid data')
     }
 })
 
 
 
-
 //login teacher
-const loginTeacher=asynchandler(async(req,res)=>{
+const loginTeacher=async(req,res)=>{
   const {email,password,isTeacher}=req.body
 
   //check admin email
   const teacher=await Teacher.findOne({email})
+ 
 
   if(teacher && (await bcrypt.compare(password,teacher.password))){
       res.json({
@@ -94,10 +95,14 @@ const loginTeacher=asynchandler(async(req,res)=>{
       })
   }
   if(!teacher){
-      res.status(400)
-      throw new Error('You are not Teacher')
-  }    
-})
+    res.status(400)
+    throw new Error('You are not Teacher ')
+}   
+if(teacher.isTeacher===false){
+  res.status(400).json("Blocked")
+  throw new Error('Teacher Blocked')
+}
+}
 
 
 
@@ -205,6 +210,127 @@ const courseTeacher =asynchandler(async (req, res) => {
   })
 
 
+  
+
+  const addTask=async (req,res)=>{
+   console.log("bifgtda",req.files);
+   console.log("bifgtda",req.query);
+   const {teacher,course,subject,startDate,endDate}=req.query
+   const file=req.files.task;
+   console.log("gg",file);
+
+  
+   if(req.files!==null && req.query !== null){
+    try {
+      const file=req.files.task;
+      file.mv(`/home/ambili/Desktop/TutionCenter/frontend/public/uploads/${file.name}`,err=>{
+        if(err){
+          console.log("filemove Error",err);
+          return res.status(500).send(err)
+        }
+       
+
+      })
+      const fileName=file.name;
+      const filePath=`/uploads/${file.name}`;
+      const {teacher,course,subject,startDate,endDate}=req.query
+      console.log("ioio",teacher,course,subject);
+      const tasks=await Task.create({
+         teacher,
+         course,
+         subject,
+         endDate,
+         startDate,
+         task:filePath
+
+      })
+
+      if(tasks){
+        res.status(201).json({
+          _id:tasks.id,
+          teacher:tasks.teacher,
+          course:tasks.course,
+          subject:tasks.subject,
+          endDate:tasks.endDate,
+          sartDate:tasks.startDate,
+          task:tasks.filePath,
+          fileName
+        })
+      }else{
+        res.status(400)
+        throw new Error('Invalid data')
+     }
+      
+
+    } catch (error) {
+      res.status(400)
+        throw new Error(error)
+    }
+   }else{
+    return res.status(400).json('No file uploaded')
+   }
+
+
+  }
+
+  const getTask=async(req,res)=>{
+    console.log(req.params.teacherId,"iii");
+
+     try{
+      const task=await Task.find({teacher:req.params.teacherId})
+      // console.log("yy",task);
+       res.status(200).json(task)
+     }catch(error){
+      res.status(400)
+      throw new Error(error)
+     }
+  }
+
+  const getTasks=async(req,res)=>{
+    console.log(req.params.course,"iii");
+
+     try{
+      const task=await Task.find({course:req.params.course})
+      console.log("yy",task);
+       res.status(200).json(task)
+     }catch(error){
+      res.status(400)
+      throw new Error(error)
+     }
+  }
+
+
+  const updateTeacher=async(req,res)=>{
+    console.log("id",req.params.Id);
+    
+    const teacher=await Teacher.findById(req.params.Id)
+    console.log("tre",teacher);
+  
+    
+    if(teacher.isTeacher===true){
+        try{
+            console.log();
+            const updateteacher=await Teacher.findByIdAndUpdate(req.params.Id,{"isTeacher":false},{new:true})
+    
+            console.log("uii",updateteacher);
+            res.status(200).json(updateteacher)
+        }catch(error){
+            res.status(400).json(error)
+        }
+       } else{
+            try{
+                const updateteacher=await Teacher.findByIdAndUpdate(req.params.Id,{"isTeacher":true},{new:true})
+    
+                console.log("u",updateteacher);
+                res.status(200).json(updateteacher)
+            }catch(error){
+                res.status(400).json(error)
+            }
+        }
+    
+    }
+
+
 
 module.exports={
     addTeacher,
@@ -213,5 +339,10 @@ module.exports={
     getTeacher ,
     editTeacher,
     loginTeacher,
-    courseTeacher
+    courseTeacher,
+    addTask,
+    getTask,
+    getTasks,
+    updateTeacher
+
  }

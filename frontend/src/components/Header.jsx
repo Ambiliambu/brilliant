@@ -65,8 +65,9 @@ function handleSubmit2(){
                     <button className='btn'><Link to='/about'>About Us</Link></button>
                     <button className='btn'>Gallery</button>
                     
-                    <button className='btn'>{user.isStudent ? <Link to='/studentpage'>Student</Link> : <Link to='/registration'>Student</Link>}</button>
-
+                    <button className='btn'>{user.isStudent ? <Link to='/studentpage'>Student</Link> :<Link to='' style={{color:"red"}}>student may unblocked / new user</Link>}</button>
+                    <button className='btn'>{user.isStudent ? <Link to='/studenttask'>Task</Link> : <Link to=''></Link>}</button>
+                                        
 
                         </>) :(<>
                     <button  className='btn'><Link to='/'>Home</Link></button>

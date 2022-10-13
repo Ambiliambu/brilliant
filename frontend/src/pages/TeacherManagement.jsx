@@ -90,16 +90,22 @@ const addTeacher=async()=>{
 
 
 
-const editTeacher=async(teacherId)=>{
+// const editTeacher=async(teacherId)=>{
 
-  try {
-    navigate(`/editteacher/${teacherId}`)
-  } catch (error) {
-    throw new error(error.response.data.message)
+//   try {
+//     navigate(`/editteacher/${teacherId}`)
+//   } catch (error) {
+//     throw new error(error.response.data.message)
     
-  }
+//   }
+// }
+async function handleBlock(Id){
+  console.log("Id",Id);
+ const {data}=await axios.patch(`/api/admins/updateteacher/${Id}`)
+ console.log("pppp",data);
+//  setData(data)
+  
 }
-
 
     const columnss = [
 
@@ -129,21 +135,22 @@ const editTeacher=async(teacherId)=>{
           sortable: true,
         },
         
-        // {
-        //   name: "Delete",
-        //   cell: (row) => (
-        //     <Button className='btn-danger'
-        //       onClick={()=>{
-        //         // handleDelete(row._id);
-        //       }}
-        //     >
-        //       Block
-        //     </Button>
+        {
+          name: "Delete",
+          cell: (row) => (
+            <Button className='btn-danger'
+              onClick={()=>{
+                handleBlock(row._id);
+
+              }}
+            >
+              Block
+            </Button>
             
-        //   ),
+          ),
 
          
-        // },
+        },
        
         {
           name: "Delete",
