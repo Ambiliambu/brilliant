@@ -23,23 +23,24 @@ features:<br/>
 * Student can fill thier datails and see the shedule and do payment.<br/>
 * they can chat with teacher in groupchat.<br/>
 
-<!-- Github: https://github.com/Ambiliambu/brilliant-tuitioncenter_management_application -->
+<!-- Github: https://github.com/Ambiliambu/brilliant -->
 
 Technologyies used:<br/>
 Node.js, Express.js, React.js, Mongoose, Bootstrap, JWT, JSX, Razorpay, Cloudinary<br/>
 
 ## Screenshots
+
 ## Getting Started
 
-To get started you can simply clone this brilliant-tuitioncenter_management_application repository and  install the dependencies.<br/>
+To get started you can simply clone this brilliant repository and  install the dependencies.<br/>
 
-#### Clone the brilliant-tuitioncenter_management_application using git:
+#### Clone the brilliant using git:
 
-`git clone https://github.com/Ambiliambu/brilliant-tuitioncenter_management_application.git`</h6><br/>
+`git clone https://github.com/Ambiliambu/brilliant.git`</h6><br/>
 
 #### Change directory
 
-`cd brilliant-tuitioncenter_management_application` <br/>
+`cd brilliant` <br/>
 
 #### Install dependencies with this command :
  

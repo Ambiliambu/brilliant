@@ -56,7 +56,7 @@ const navigate=useNavigate()
         <Header/>
         <div className='container mt-5'> 
         <div>
-          <button onClick={()=>{chatHandle(student?.courseId?._id)}}>Chat</button>
+          {/* <button onClick={()=>{chatHandle(student?.courseId?._id)}}>Chat</button> */}
           <h5>Course:<b>{student?.courseId?.coursename}</b></h5>
           <h5>Name: <b>{student.name}</b></h5>
         </div>
