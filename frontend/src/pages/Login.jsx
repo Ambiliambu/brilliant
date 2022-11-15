@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import {useSelector,useDispatch} from 'react-redux'
 import {Link, useNavigate} from 'react-router-dom'
 import {toast} from 'react-toastify'
-import {login,reset} from '../features/auth/authSlice'
+import {login,reset} from '../features/auth/user/authSlice'
 import Spinner from '../components/Spinner'
 import './Form.scss'
 import Header from '../components/Header'
@@ -22,7 +22,7 @@ function Login() {
   const navigate=useNavigate()
   const dispatch=useDispatch()
 
-  const {user,isLoading,isError,isSuccess,message }=useSelector(
+  const {student,isLoading,isError,isSuccess,message }=useSelector(
     (state)=>state.auth
     )
 
@@ -31,24 +31,29 @@ function Login() {
       // const userin=JSON.parse(localStorage.getItem('user'))
       // console.log("ur",userin);
         if (isError){
-          toast.error(message)
+          toast.error(message,"oo")
         }
+        
   
-      //  console.log("useroo",user);
+       console.log("useroo");
   
-        if(isSuccess && user){
-          if(user.isStudent){
-            navigate('/studentpage')
+        if(isSuccess ){      
+          // navigate('/')
+
+          if(student.status){
+            navigate('/')
           }
           else{
-            // toast.error('student blocked')
-          navigate('/')
+            
+            toast.error('student blocked')
+            localStorage.removeItem('student')
+          navigate('/login')
           }
         }
       
         dispatch(reset())
   
-      },[user,isError,isSuccess,message,navigate,dispatch])
+      },[isError,isSuccess,message,navigate,dispatch])
 
  
 

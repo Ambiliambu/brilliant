@@ -18,7 +18,7 @@ function EditCourse() {
         useEffect(() => {
             try {
               (async function () {
-                const { data } = await axios.get(`/api/admins/editcourse/${courseId.courseId}`);
+                const { data } = await axios.get(`/api/admins/getcourse/${courseId.courseId}`);
 
                 setName(data.coursename);
                 setAmount(data.courseamount);

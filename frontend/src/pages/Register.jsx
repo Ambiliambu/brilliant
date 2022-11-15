@@ -2,7 +2,7 @@ import { useState,useEffect } from 'react'
 import {useSelector,useDispatch} from 'react-redux'
 import {Link, useNavigate} from 'react-router-dom'
 import {toast} from 'react-toastify'
-import {registerUser,reset} from '../features/auth/authSlice'
+import {registerStudent,reset} from '../features/auth/user/authSlice'
 import Spinner from '../components/Spinner'
 import './Form.scss'
 import Header from '../components/Header'
@@ -19,17 +19,18 @@ function Register() {
   const navigate=useNavigate()
   const dispatch=useDispatch()
 
-  const {user,isLoading,isError,isSuccess,message }=useSelector(
+  const {student,isLoading,isError,isSuccess,message }=useSelector(
     (state)=>state.auth
     )
 // console.log("gggg",user);
 
     useEffect(()=>{
       if (isError){
+        console.log("mes",message);
         toast.error(message)
       }
       if(isSuccess){
-        navigate('/')
+        navigate('/login')
       }
 
       dispatch(reset())
@@ -43,7 +44,7 @@ function Register() {
 
  const onSubmit=async(data)=>{
  
-       dispatch(registerUser(data))
+       dispatch(registerStudent(data))
   }
 
  
@@ -111,6 +112,25 @@ function Register() {
               minLength:{value:3,message:"Password must be at least 3 character"},
               maxLength:{value:6,message:"Password cannot exceed more than 6 character"},
               })}
+
+            />
+           <p  style={{ color: "crimson" }}>{errors.password?.message}</p>
+
+          </div>
+          <div className="form-group mt-3">
+            {/* <label>Password</label> */}
+            <input
+              type="number"
+              className="form-control mt-1"
+              id='phonenumber'
+              name='phonenumber'
+              placeholder=" Enter your phone number"
+              {...register('phonenumber', {required:{value:true,message:"  Phone Number is required"},
+              maxLength: { value: 10, message: "Enter the valid Phone number " },
+              minLength: { value: 10, message: "Enter the valid Phone number " },
+              pattern: { value: /^[0-9+-]+$/, message: "Enter valid Phone number " }
+
+            })}
 
             />
            <p  style={{ color: "crimson" }}>{errors.password?.message}</p>

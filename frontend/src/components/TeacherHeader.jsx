@@ -1,7 +1,7 @@
-import {FaSignOutAlt} from 'react-icons/fa'
+import {FaSignOutAlt, FaUserTie} from 'react-icons/fa'
 import {Link,useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
-import {teacherlogout,reset} from '../features/auth/user/teacher/teacherSlice'
+import {teacherlogout,reset} from '../features/auth/teacher/teacherSlice'
 import {Button, Container, Nav, Navbar} from 'react-bootstrap'
 import  '../pages/Form.scss'
 import Modal from 'react-bootstrap/Modal';
@@ -14,22 +14,9 @@ function TeacherHeader() {
     const dispatch=useDispatch()
     const {teacher}=useSelector((state)=>state.teacherauth)
    
-
-    
-  
     const [show, setShow] = useState(false);
-
-
-
-    
-
-   
-
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
-
- 
-
 
 function handleSubmit(){
     dispatch(teacherlogout())
@@ -56,7 +43,7 @@ function handleSubmit(){
                     <button className='btn' ><Link to='/'>Home</Link></button>
                     <button className='btn'><Link to='/about'>About Us</Link></button>
                     <button className='btn'>Gallery </button>
-                   {teacher.isTeacher===true ? ( <><button className='btn'><Link to='/teacherpage'>Teacher</Link></button> 
+                   {teacher.status ? ( <><button className='btn'><Link to='/teacherpage'>Teacher</Link></button> 
                     <button className='btn'><Link to='/task'>Task</Link></button></>) :(<></>)} 
                     
 
@@ -67,7 +54,8 @@ function handleSubmit(){
 
                      
                           
-         {teacher ?(<>
+         {teacher.status ?(<>
+            <button className='btn '><span className=''><FaUserTie /></span> {teacher.name}</button>
          <button className='btn' onClick={handleShow}>
              <FaSignOutAlt/> Logout        
          </button>
@@ -94,9 +82,6 @@ function handleSubmit(){
             <div>
          </div>
     )}
-       
-        
-
                     </Nav>
                     <></>
                 </Navbar.Collapse>

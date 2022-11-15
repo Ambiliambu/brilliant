@@ -1,5 +1,6 @@
 const asynchandler=require('express-async-handler')
 const {Schedule, Teacher, Course}=require('../models/adminModel')
+const moment=require('moment')
 
 
 
@@ -7,144 +8,59 @@ const {Schedule, Teacher, Course}=require('../models/adminModel')
 
 const addSchedule=asynchandler(async(req,res)=>{
 
-    const {mday, mstarttime,mendtime,msubject,mteacher,tuday,tustarttime,tuendtime,tusubject,tuteacher,
-      wday, wstarttime,wendtime,wsubject,wteacher,thday, thstarttime,thendtime,thsubject,thteacher,
-      fday, fstarttime,fendtime,fsubject,fteacher,sday, sstarttime,sendtime,ssubject,steacher,course}=req.body
+  const {monday,tuesday,wednesday,thursday,friday,saturday,courseId,createDate,endDate}= req.body
 
-    console.log("ggg",req.body,mendtime,tuendtime,wendtime,thendtime,fendtime,sendtime,course)
-    
-    if(!mday || !mstarttime || !mendtime || !msubject || !mteacher || !tuday || !tustarttime || !tuendtime || !tusubject || !tuteacher ||
-      !wday || !wstarttime || !wendtime || !wsubject || !wteacher ||!thday || !thstarttime || !thendtime || !thsubject || !thteacher ||
-      !fday || !fstarttime || !fendtime || !fsubject || !fteacher ||!sday || !sstarttime || !sendtime || !ssubject || !steacher ||!course ){
+    // console.log("ggrwq.body ",req.body)
+
+    if(!monday.subjectId || !monday.teacherId || !tuesday.subjectId || !tuesday.teacherId || !wednesday.subjectId || !wednesday.teacherId || !thursday.subjectId || !thursday.teacherId || !friday.subjectId || !friday.teacherId || !saturday.subjectId || !saturday.teacherId || !monday.startTime || !monday.endTime || !tuesday.startTime || !tuesday.endTime|| !wednesday.startTime || !wednesday.endTime|| !thursday.startTime || !thursday.endTime|| !friday.startTime || !friday.endTime|| !saturday.startTime || !saturday.endTime || !courseId){
 
         res.status(400)
         throw new Error('Please add all field',)
     }
 
 
+  const  mondayData=await Teacher.find({$and:[{teacherId:monday.teacherId},{courseId:courseId},{subjectId:monday.subjectId}]})
+  const tuesdayData =await Teacher.findOne({$and:[{teacherId:tuesday.teacherId},{subjectId:tuesday.subjectId},{courseId:courseId}]})
+  const wednesdayData =await Teacher.findOne({$and:[{teacherId:wednesday.teacherId},{subjectId:wednesday.subjectId},{courseId:courseId}]})
+  const thursdayData=await Teacher.findOne({$and:[{teacherId:thursday.teacherId},{subjectId:thursday.subjectId},{courseId:courseId}]})
+  const fridayData =await Teacher.findOne({$and:[{teacherId:friday.teacherId},{subjectId:friday.subjectId},{courseId:courseId}]})
+  const saturdayData =await Teacher.findOne({$and:[{teacherId:saturday.teacherId},{subjectId:saturday.subjectId},{courseId:courseId}]})
+  console.log("iooooooi",fridayData,friday.teacherId,friday.subjectId);
 
-  //  const subjectm=await Teacher.find({$and:[{course:course},{subject:{$in:[msubject,tusubject,wsubject,thsubject,fsubject,ssubject]}}]})
-  //  console.log("oo",subjectm);
 
-  // const course= await Course.findById(Id);
-  // const cname=course.coursename
-
-
-
-
-  const subjectm =await Teacher.findOne({$and:[{name:mteacher},{course:course},{subject:msubject}]})
-  const subjecttu =await Teacher.findOne({$and:[{name:tuteacher},{subject:tusubject},{course:course}]})
-  const subjectw =await Teacher.findOne({$and:[{name:wteacher},{subject:wsubject},{course:course}]})
-  const subjectth =await Teacher.findOne({$and:[{name:thteacher},{subject:thsubject},{course:course}]})
-  const subjectf =await Teacher.findOne({$and:[{name:fteacher},{subject:fsubject},{course:course}]})
-  const subjects =await Teacher.findOne({$and:[{name:steacher},{subject:ssubject},{course:course}]})
-
- console.log("tttt",subjectm);
-
-if(!subjectm || !subjecttu || !subjectw || !subjectth || !subjectf || !subjects){
+if(!mondayData || !tuesdayData || !wednesdayData || !thursdayData || !fridayData || !saturdayData){
   console.log("iiii");
   res.status(400)
-  throw new Error('add correct values ')
+  throw new Error('Add correct values ')
 
 }
-  // console.log("ee",subjectm);
-  // const subjecttu=await courseteacher.findOne({$and:[{course:course},{subject:msubject}]})
-
- 
 
 
-  //check it exist
-  const courseExist=await Schedule.findOne({course})
-  if(courseExist){
-   res.status(400)
-   throw new Error('Aleready have schedule ')
-  }
+  //create schedule
+  const schedule=await Schedule.create({
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    courseId,
+    createDate:moment(createDate).format('DD-MMM-YYYY'),
+    endDate:moment(endDate).format('DD-MMM-YYYY')
 
- 
-
-   console.log("create subject");
-    //create schedule
-
-    const schedule=await Schedule.create({
-        mday,
-        mstarttime,
-        mendtime,
-        msubject,
-        mteacher,
-        tuday,
-        tustarttime,
-        tuendtime,
-        tusubject,
-        tuteacher,
-        wday,
-        wstarttime,
-        wendtime,
-        wsubject,
-        wteacher,
-        thday,
-        thstarttime,
-        thendtime,
-        thsubject,
-        thteacher,
-        fday,
-        fstarttime,
-        fendtime,
-        fsubject,
-        fteacher,
-        sday,
-        sstarttime,
-        sendtime,
-        ssubject,
-        steacher,
-        course,
-        
     })
-
-    console.log("iii",course);
-
     if(schedule){
         res.status(201).json({
             _id:schedule.id,
-
-            mday:schedule.mday,
-            mstarttime:schedule.mstarttime,
-            mendtime:schedule.mendtime,
-            msubject:schedule.msubject,
-            mteacher:schedule.mteacher,
-
-            tuday:schedule.tuday,
-            tustarttime:schedule.tustarttime,
-            tuendtime:schedule.tuendtime,
-            tusubject:schedule.tusubject,
-            tuteacher:schedule.tuteacher,
-
-            wday:schedule.wday,
-            wstarttime:schedule.wstarttime,
-            wendtime:schedule.wendtime,
-            wsubject:schedule.wsubject,
-            wteacher:schedule.wteacher,
-
-            thday:schedule.thday,
-            thstarttime:schedule.thstarttime,
-            thendtime:schedule.thendtime,
-            thsubject:schedule.thsubject,
-            thteacher:schedule.thteacher,
-
-
-            fday:schedule.fday,
-            fstarttime:schedule.fstarttime,
-            fendtime:schedule.fendtime,
-            fsubject:schedule.fsubject,
-            fteacher:schedule.fteacher,
-
-            sday:schedule.sday,
-            sstarttime:schedule.sstarttime,
-            sendtime:schedule.sendtime,
-            ssubject:schedule.ssubject,
-            steacher:schedule. steacher,
-
- 
-            course:schedule.course,
+            monday:schedule.monday,
+            tuesday:schedule.tuesday,
+            wednesday:schedule.wednesday,
+            thursday:schedule.thursday,
+            friday:schedule.friday,
+            saturday:schedule.saturday,          
+            createDate:schedule.createDate,
+            endDate:schedule.endDate,
+            courseId:schedule.courseId,
 
         })
 
@@ -168,65 +84,51 @@ if(!subjectm || !subjecttu || !subjectw || !subjectth || !subjectf || !subjects)
  })
 
 
-//delete schedule
 
+//Delete schedule
 
 const deleteSchedule = asynchandler(async (req, res) => {
-    const Id=req.query.id
-    console.log("hhhhj",Id);
-
-const deleteschedule=await Schedule.findById(Id)
-
-  
-    if (!deleteschedule) {
-      res.status(400)
-      throw new Error('Schedule not found')
-    }
-  
-    // Check for admin*
-    // if (!req.admin) {
-    //   res.status(401)
-    //   throw new Error('admin not found')
-    // }
-  console.log("delej");
-   const data= await deleteschedule.remove()
-   console.log("gdetlte");
-  
-    res.status(200).json({  deletescheduleId:data._id })
-  })
+  const Id=req.params.id
+  console.log("hhhhj",Id);
+try{
+  const deleteschedule=await Schedule.findById(Id)
+ const data= await deleteschedule.remove()
+ console.log("gdetlte");
+ res.status(200).json({  deletescheduleId:data._id })
+}catch(error){
+  res.status(400).json("error is occured when getting scheduls")
+}
+})
 
 
 
 
-// //get schedule
+
+
+
+ //get schedule
 
 const getSchedule =asynchandler(async (req, res) => {
   const Id=req.params.courseId;
-  console.log("ttt",Id);
+  console.log("ttiiit",Id);
     try {
-      const course= await Course.findById(Id);
-      const cname=course.coursename
-
-      const schedule= await Schedule.findOne({course:cname});
-      // console.log("qqq",schedule);
+      const schedule= await Schedule.findOne({courseId:Id}).populate(["monday.subjectId","monday.teacherId","tuesday.subjectId","tuesday.teacherId","wednesday.subjectId","wednesday.teacherId","thursday.subjectId","thursday.teacherId","friday.subjectId","friday.teacherId","saturday.subjectId","saturday.teacherId","courseId"]);
+      console.log("qqqgg",schedule);
+     
       res.status(200).json(schedule);
     } catch (error) {
       res.json(error);
     }
   });
 
-  const accessSchedule =asynchandler(async (req, res) => {
-    const email=req.query.email;
-  //  console.log("em",email);
+
+  const teacherSchedule =asynchandler(async (req, res) => {
+    const Id=req.params.teacherId
+    console.log("iiiiiid",Id);
+  // //  console.log("em",email);
       try {
-        const teacher= await Teacher.findOne({email:email});
-    // console.log("oo",teacher);
-  
-        const schedule= await Schedule.findOne({course:teacher.course})
-
-
-         
-        // console.log("qqq",schedule);
+        const schedule= await Schedule.find({$or:[{"monday.teacherId":Id},{"tuesday.teacherId":Id},{"wednesday.teacherId":Id},{"thursday.teacherId":Id},{"friday.teacherId":Id},{"saturday.teacherId":Id}]})
+        console.log("qqq",schedule);
         res.status(200).json(schedule);
       } catch (error) {
         res.json(error);
@@ -241,6 +143,6 @@ module.exports={
     getSchedules,
     deleteSchedule,
     getSchedule,
-    accessSchedule
+    teacherSchedule
 
 }

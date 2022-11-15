@@ -6,36 +6,35 @@ const {Subject}=require('../models/adminModel')
 //create subject
 
 const addSubject=asynchandler(async(req,res)=>{
-    const {subjectname,coursename}=req.body
+    const {subjectname,courseId}=req.body
 
     // console.log("gggg",req.body)
     
-    if(!coursename || !subjectname){
+    if(!courseId || !subjectname){
         res.status(400)
-        throw new ('Please add all field')
+        throw new Error ('Please add all field')
     }
    // check it exist
-   const courseExist=await Subject.findOne({coursename})
-   if(courseExist){
-     const subjectExist=await Subject.findOne({subjectname})
-     if(subjectExist){
+   const Exist=await Subject.findOne({$and:[{courseId:courseId},{subjectname:subjectname}]})
+   if(Exist){
         res.status(400)
         throw new Error( 'It already exists ')
-     }
-   }
+    }
+   
+    
    console.log("create subject");
     //create subject
 
     const subject=await Subject.create({
-        coursename,subjectname
+        courseId,subjectname
     })
 
-    console.log("iii",coursename);
+    console.log("iii",courseId);
 
     if(subject){
         res.status(201).json({
             _id:subject.id,
-            coursename:subject.coursename,
+            courseId:subject.courseId,
             subjectname:subject.subjectname
         })
     }else{
@@ -45,11 +44,23 @@ const addSubject=asynchandler(async(req,res)=>{
 })
 
 
-//get subject
+//get subjects
  const getSubjects=asynchandler(async(req,res)=>{
     try {
-        const subjects=await Subject.find({})
-        // console.log("oo",subjects);
+        const subjects=await Subject.find({}).populate("courseId")
+        // console.log("oo",subjects);      
+        res.json(subjects)
+        
+    } catch (error) {
+        res.json("error is occured when getting subjects")
+    }
+ })
+
+ const courseSubjects=asynchandler(async(req,res)=>{
+    const Id=req.params.courseId
+    try {
+        const subjects=await Subject.find({courseId:Id}).populate("courseId")
+        // console.log("oo",subjects);      
         res.json(subjects)
         
     } catch (error) {
@@ -59,46 +70,21 @@ const addSubject=asynchandler(async(req,res)=>{
 
 //delete subject
 
-// const deleteSubject=asynchandler(async(req,res)=>{
-//     const Id=req.query.id
-  
-//     try{
-//         const deleteSubject=await Subject.findById(Id)
-//           const data= await  deleteSubject.remove()
-//           res.status(200).json({
-//              deleteSubjectId:data._id
-//           })
-//     }catch(error){
-//          res.status()
-//          throw new Error('Cannot get subject')
-//     }
-
-// })
-
-
-const deleteSubject = asynchandler(async (req, res) => {
+const deleteSubject=asynchandler(async(req,res)=>{
     const Id=req.query.id
-    console.log("hhhhj",Id);
-
-const deletesubject=await Subject.findById(Id)
-
   
-    if (!deletesubject) {
-      res.status(400)
-      throw new Error('subject not found')
+    try{
+        const deleteSubject=await Subject.findById(Id)
+          const data= await  deleteSubject.remove()
+          res.status(200).json({
+             deleteSubjectId:data._id
+          })
+    }catch(error){
+         res.status()
+         throw new Error('Cannot get subject')
     }
-    console.log("hhhhj");
-  
-    // Check for admin*
-    // if (!req.admin) {
-    //   res.status(401)
-    //   throw new Error('admin not found')
-    // }
-  console.log("hhhhj");
-    await deletesubject.remove()
-  
-    res.status(200).json({  deletesubjectId:data._id })
-  })
+
+})
 
 
 
@@ -123,4 +109,5 @@ module.exports={
     getSubjects,
     deleteSubject,
     getSubject ,
+    courseSubjects
 }

@@ -48,9 +48,10 @@ const subjectSchema=mongoose.Schema({
         type:String,
         required:[true,'Please add an   subject name']
     },
-    coursename:{
-        type:String,
-        required:[true,'Please add an course name']
+    courseId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Course',
+        required:true
     },
     
 
@@ -81,21 +82,34 @@ const teacherSchema=mongoose.Schema({
         type:Number,
         required:[true,"Please add phone number"]
     },
-    course:{     
-        type:String,     
+    courseId:{     
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Course',     
         required:true
 
     },
-    subject:{
-        type:String,
-        required:[true,'Please add subject']
+    subjectId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Subject',
+        required:true
     },
-    // salary:{
-    //     type:Number,
-    //     required:true,
-    //     default:null
-    // },
-    isTeacher:{
+    salary:{
+        type:Number,
+        default:3000,
+        required:true,
+    },
+
+    createdate:{
+       type:String,
+       required:true,
+       default:new Date()
+    },
+    active:{
+       type:Boolean,
+       required:true,
+       default:false
+    },
+    status:{
         type:Boolean,
         required:true,
         default:true
@@ -109,156 +123,181 @@ const teacherSchema=mongoose.Schema({
 //schedule
 const scheduleSchema=mongoose.Schema({
    
-        mday:{
-            type:String,
-            required:[true,'Please add an day']
-        },
-        mstarttime:{
-            type:String,
-            required:[true,"Please add start time"]
-        },
-        mendtime:{
-            type:String,
-            required:[true,"Please add end time"]
-        },
+        
+    
+    courseId:{     
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Course',
+        required:true
+    
+    },
+    createDate:{
+        type:String,
+       required:true,
+     
+
+    },
+    endDate:{
+        type:String,
+       required:true,
       
-        msubject:{
-            type:String,
-            required:[true,'Please add subject']
-        },
-    
-        mteacher:{
-            type:String,
-            required:[true,'please add teacher']
-        },
-       
-  
-        tuday:{
-            type:String,
-            required:[true,'Please add an day']
-        },
-        tustarttime:{
-            type:String,
-            required:[true,"Please add start time"]
-        },
-        tuendtime:{
-            type:String,
-            required:[true,"Please add end time"]
-        },
+
+    },
+
+    monday:{
         
-        tusubject:{
-            type:String,
-            required:[true,'Please add subject']
-        },
-    
-        tuteacher:{
-            type:String,
-            required:[true,'please add teacher']
-        },
-   
-        wday:{
-            type:String,
-            required:[true,'Please add an day']
-        },
-        wstarttime:{
-            type:String,
-            required:[true,"Please add start time"]
-        },
-        wendtime:{
-            type:String,
-            required:[true,"Please add end time"]
-        },
+            startTime:{
+                type:String,
+                required:true
+            },
+            endTime:{
+                type:String,
+                required:true,
+            },                
+
+            subjectId:{
+                    type:mongoose.Schema.Types.ObjectId,
+                    ref:'Subject',
+                    required:true
+                
+            },
+            teacherId:{
+                    type:mongoose.Schema.Types.ObjectId,
+                    ref:'Teacher',
+                    required:true
+                
+            }
         
-        wsubject:{
-            type:String,
-            required:[true,'Please add subject']
-        },
-    
-        wteacher:{
-            type:String,
-            required:[true,'please add teacher']
-        },
-    
-        thday:{
-            type:String,
-            required:[true,'Please add an day']
-        },
-        thstarttime:{
-            type:String,
-            required:[true,"Please add start time"]
-        },
-        thendtime:{
-            type:String,
-            required:[true,"Please add end time"]
-        },
+    },
+    tuesday:{
         
-        thsubject:{
+        startTime:{
             type:String,
-            required:[true,'Please add subject']
-        },
-    
-        thteacher:{
-            type:String,
-            required:[true,'please add teacher']
-        },
-   
-        fday:{
-            type:String,
-            required:[true,'Please add an day']
-        },
-        fstarttime:{
-            type:String,
-            required:[true,"Please add start time"]
-        },
-        fendtime:{
-            type:String,
-            required:[true,"Please add end time"]
-        },
-                          
-        fsubject:{
-            type:String,
-            required:[true,'Please add subject']
-        },
-    
-        fteacher:{
-            type:String,
-            required:[true,'please add teacher']
-        },
-   
-        sday:{
-            type:String,
-            required:[true,'Please add an day']
-        },
-        sstarttime:{
-            type:String,
-            required:[true,"Please add start time"]
-        },
-        sendtime:{
-            type:String,
-            required:[true,"Please add end time"]
-        },
-       
-        ssubject:{
-            type:String,
-            required:[true,'Please add subject']
-        },
-    
-        steacher:{
-            type:String,
-            required:[true,'please add teacher']
-        },
-    
-    course:{     
-            type:String,     
             required:true
-    
+        },
+        endTime:{
+            type:String,
+            required:true,
+        },                
+
+        subjectId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Subject',
+                required:true
+            
+        },
+        teacherId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Teacher',
+                required:true
+            
         }
-    }
     
+   },
+   wednesday:{
+        
+        startTime:{
+            type:String,
+            required:true
+        },
+        endTime:{
+            type:String,
+            required:true,
+        },                
 
-,{
-    
+        subjectId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Subject',
+                required:true
+            
+        },
+        teacherId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Teacher',
+                required:true
+            
+        }
 
+    },
+    thursday:{
+            
+        startTime:{
+            type:String,
+            required:true
+        },
+        endTime:{
+            type:String,
+            required:true,
+        },                
+
+        subjectId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Subject',
+                required:true
+            
+        },
+        teacherId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Teacher',
+                required:true
+            
+        }
+
+    },
+    friday:{
+            
+        startTime:{
+            type:String,
+            required:true
+        },
+        endTime:{
+            type:String,
+            required:true,
+        },                
+
+        subjectId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Subject',
+                required:true
+            
+        },
+        teacherId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Teacher',
+                required:true
+            
+        }
+
+    },
+    saturday:{
+            
+        startTime:{
+            type:String,
+            required:true,
+        },
+        endTime:{
+            type:String,
+            required:true,
+            
+
+        },                
+
+        subjectId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Subject',
+                required:true
+            
+        },
+        teacherId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Teacher',
+                required:true
+            
+        }
+
+    },
+
+},{
     timestamps:true
 })
 

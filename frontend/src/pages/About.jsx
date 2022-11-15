@@ -1,12 +1,17 @@
 import React from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import TeacherHeader from '../components/TeacherHeader'
 
 function About() {
+  const {teacher}=useSelector((state)=>state.teacherauth)
+  const {student}=useSelector((state)=>state.auth)
+
   return (
     <div >
-        <Header/>
+          {teacher ? <TeacherHeader/> : <Header/>}
         <div className='container'>
         
       <h1 className='mt-4 ml-4'>About Us</h1>

@@ -3,27 +3,30 @@ import { useEffect, useState } from 'react';
 import {Button, Container, Modal} from 'react-bootstrap'
 import DataTable from "react-data-table-component";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar'
 import './Form.scss'
 
 
 function StudentManagement() {
 
-    const [show,setShow]=useState(false)
-  const [student,setStudent]=useState([])
-  const [refresh, setrefresh] = useState(false);
-//  const [deleteId,setdeleteId]=useState('')
-// const [data,setData]=useState('')
+const [show,setShow]=useState(false)
+const [student,setStudent]=useState([])
+const [refresh, setrefresh] = useState(false);
+const [search,setSearch]=useState('')
+const [filterData, setFilterData] = useState([]);
+const [data,setData]=useState('')
  const navigate=useNavigate()
+
+
+
+
 
 
 useEffect(()=>{
   const admin=localStorage.getItem('admin');
   // console.log("admin",admin);
   if(admin){
-    
-  
   (async function(){
     try {
       const config={
@@ -32,36 +35,51 @@ useEffect(()=>{
 
         }
       }
-      const data=await axios.get('/api/admins/getstudents',config)
-
+      const data=await axios.get(`/api/admins/getstudents`,config)
+      // console.log("ffdata",data);
       setStudent(data.data)
-      console.log("student data",data.data);
+
+    
     } catch (error) {
       console.error(error)
     }
   })();
-}else{
-  navigate('/admin')
+}else{ 
+ 
+  navigate('/admin')  
 }
-},[refresh,navigate])
+},[navigate,refresh,data])
 
 
 
+async function handleBlockAndUnblock(Id,status){
+  console.log("Id",Id,status);
+  try {
+    const {data}=await axios.patch(`/api/admins/blockandunblockstudent/${Id}`,{status:status})
+    setData(data)
+  } catch (error) {
+    console.log(error);
+  }
+
+  
+}
 
 const handleClose = () => setShow(false);
 
 
-async function handleBlock(Id){
-  console.log("Id",Id);
- const {data}=await axios.patch(`/api/admins/updatestudent/${Id}`)
- console.log("pppp",data);
-//  setData(data)
+
+useEffect(() => {
+
+  const result = student.filter((obj) => {
   
-}
-
-
-
-
+      console.log("kk",obj.courseId?.coursename);
+      return obj.courseId?.coursename.toLowerCase().includes(search.toLowerCase());
+  
+      
+  });
+  console.log("iiiresult",result);
+  setFilterData(result);
+}, [student,search]);
 
 
     const columnss = [
@@ -93,22 +111,29 @@ async function handleBlock(Id){
         },
         {
           name: "Course",
-          selector: (row) => row.course,
+          selector: (row) => row.courseId?.coursename,
           sortable: true,
         }, 
         {
           name: "Action",
           cell: (row) => (
-            
-            <Button className='btn-danger'
-              onClick={()=>{
-                handleBlock(row._id);
-              }}
-            >
-              Block
-            </Button>
-            
-          ),       
+            row.status ? ( <Button className='btn-danger'
+            onClick={()=>{
+              handleBlockAndUnblock(row._id,false);
+            }}
+          >
+            Block
+          </Button>):(<Button className='btn-success'
+          onClick={()=>{
+            handleBlockAndUnblock(row._id,true);
+          }}
+        >
+
+          Unblock
+        </Button>)
+           
+          )  
+                 
         },    
     ]
   return (
@@ -141,20 +166,28 @@ async function handleBlock(Id){
             </Modal.Footer>
           </Modal>
 
-
-
-         
-
-        
-
           <div className="shadow p-3 mb-5 bg-white rounded ">
             <DataTable
-              title="Student Details"
+             
+              title="Student Details " 
               columns={columnss}
-              data={student}
+              data={filterData}
               pagination
               fixedHeader
               highlightOnHover
+              subHeader
+              subHeaderComponent={
+                <input
+                  type="text"
+                  placeholder="Serch here..."
+                  className="w-25 form-control"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                   
+                />
+              }
 
             />
           </div>

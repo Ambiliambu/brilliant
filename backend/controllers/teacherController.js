@@ -2,27 +2,23 @@ const asynchandler=require('express-async-handler')
 const {Teacher}=require('../models/adminModel')
 const bcrypt=require('bcryptjs')
 const { Task } = require('../models/userModel')
-
-
+const moment=require('moment')
 
 
 //create teacher
 
 const addTeacher=asynchandler(async(req,res)=>{
-    const {name,email,password,phonenumber,course,subject,isTeacher}=req.body
-    console.log("hhh",req.body);
-    if(!name || !email || !password || !phonenumber || !course || !subject ){
+    const {name,email,password,phonenumber,courseId,subjectId,active,status,createdate,salary}=req.body
+    if(!name || !email || !password || !phonenumber || !courseId || !subjectId  ){
         res.status(400)
-        throw new ('Please add all field')
+        throw new Error ('Please add all field')
     }
     //check course and subject 
-      const Exist=await Teacher.findOne({$and:[{course:course},{subject:subject}]})
-      if(Exist){
-        
-           res.status(400)
-           throw new Error( 'it already exists ')
-       
-      }
+      // const Exist=await Teacher.findOne({$and:[{course:courseId},{subject:subjectId}]})
+      // if(Exist){
+      //      res.status(400)
+      //      throw new Error( 'it already exists ')
+      // }
      
 
     // check it exist
@@ -31,29 +27,29 @@ const addTeacher=asynchandler(async(req,res)=>{
         res.status(400)    
         throw new Error('Already exist')
     }
-    // check it same subject for same course
-
 
      
     //hash password
     const salt=await bcrypt.genSalt(10)
     const hashedPassword=await bcrypt.hash(password,salt)
-
+    
+    console.log("ooodat",req.body.createdate);
+    
+    
+   const day=moment(req.body.createdate).format('DD-MMM-YYYY')
     //create teacher
-
     const teacher=await Teacher.create({
       name,
       email,
       password:hashedPassword,
       phonenumber,
-      course,
-      subject,
-      // salary,
-      isTeacher
+      courseId,
+      subjectId,
+      salary,
+      createdate:day,
+      status,
+      active
     })
-
-
-
 
     if(teacher){
         res.status(201).json({
@@ -62,10 +58,12 @@ const addTeacher=asynchandler(async(req,res)=>{
             email:teacher.email,
             password:teacher.password,
             phonenumber:teacher.phonenumber,
-            course:teacher.course,
-            subject:teacher.subject,
-            // salary:teacher.salary,
-            isTeacher:teacher.isTeacher,
+            courseId:teacher.courseId,
+            subjectId:teacher.subjectId,
+            salary:teacher.salary,
+            status:teacher.status,
+            createddate:teacher.createddate,
+            active:teacher.active
 
         })
     }else{
@@ -78,30 +76,22 @@ const addTeacher=asynchandler(async(req,res)=>{
 
 //login teacher
 const loginTeacher=async(req,res)=>{
-  const {email,password,isTeacher}=req.body
+  const {email,password}=req.body
 
   //check admin email
-  const teacher=await Teacher.findOne({email})
- 
-
-  if(teacher && (await bcrypt.compare(password,teacher.password))){
-      res.json({
-          _id:teacher.id,
-          name:teacher.name,
-          email:teacher.email,
-          isTeacher:teacher.isTeacher,
-          // token:generateToken(teacher._id)
-
-      })
-  }
-  if(!teacher){
+  const teacher=await Teacher.findOne({email}).populate(["courseId","subjectId"])
+  try {
+    if(teacher && (await bcrypt.compare(password,teacher.password))){
+      res.json(teacher)
+    }else{
+      res.status(400)
+      throw new Error('Invalid credentials')
+    }  
+  } catch (error) {
     res.status(400)
-    throw new Error('You are not Teacher ')
-}   
-if(teacher.isTeacher===false){
-  res.status(400).json("Blocked")
-  throw new Error('Teacher Blocked')
-}
+    throw new Error("Something went wrong")
+  }
+
 }
 
 
@@ -109,7 +99,8 @@ if(teacher.isTeacher===false){
 //get teachers
  const getTeachers=asynchandler(async(req,res)=>{
     try {
-        const teachers=await Teacher.find({})
+        const teachers=await Teacher.find({}).populate(["courseId","subjectId"])
+        console.log("oo",teachers);
         res.json(teachers)
         
     } catch (error) {
@@ -120,65 +111,56 @@ if(teacher.isTeacher===false){
 
 
 
-// //delete teacher
+//delete teacher
+
 const deleteTeacher = asynchandler(async (req, res) => {
     const Id=req.query.id
     console.log("hhhhj",Id);
-
+try{
 const deleteteacher=await Teacher.findById(Id)
+await deleteteacher.remove()
+ res.status(200).json({  deleteteacher:data._id })
 
-  
-    if (!deleteteacher) {
-      res.status(400)
-      throw new Error('Teacher not found')
-    }
-  
-    // Check for admin*
-    // if (!req.admin) {
-    //   res.status(401)
-    //   throw new Error('admin not found')
-    // }
-    await deleteteacher.remove()
-  
-    res.status(200).json({  deleteteacher:data._id })
-  })
+}catch(error){
+  res.status(400)
+  throw new Error('Teacher not found')
+} 
+})
 
 
 
-//get a teacher with id
+//get a teacher
 
 const getTeacher =asynchandler(async (req, res) => {
   console.log("id",req.params.teacherId);
   
     try {
-      const teacher = await Teacher.findById(req.params.teacherId);
+      const teacher = await Teacher.findById({_id:req.params.teacherId}).populate(['courseId',"subjectId"]);
       res.status(200).json(teacher);
     } catch (error) {
       res.json(error);
     }
   });
-  // get teacher with course
 
+
+
+// get teacher with course
 const courseTeacher =asynchandler(async (req, res) => {
-  const course=req.query.course
-  console.log("cou",course);
+  const courseId=req.params.courseId
+  // console.log("cou",courseId);
     try {
-      const teacher = await Teacher.find({course});
-      console.log("kk",teacher);
+      const teacher = await Teacher.find({courseId:courseId}).populate(["subjectId","courseId"]);
+      // console.log("kk",teacher);
       res.status(200).json(teacher);
     } catch (error) {
       res.json(error);
     }
-  });
+});
 
-  // edit teacher
-
-  const editTeacher = asynchandler(async (req, res) => {
-
-    const editteacher = await Teacher.findById(req.params.teacherId)
-
+// edit teacher
+const editTeacher = asynchandler(async (req, res) => {
+   const editteacher = await Teacher.findById(req.params.teacherId)
    console.log("ggg",editteacher); 
-
     if (!editteacher ) {
       res.status(400)
       throw new Error('Teacher not found')
@@ -212,121 +194,19 @@ const courseTeacher =asynchandler(async (req, res) => {
 
   
 
-  const addTask=async (req,res)=>{
-   console.log("bifgtda",req.files);
-   console.log("bifgtda",req.query);
-   const {teacher,course,subject,startDate,endDate}=req.query
-   const file=req.files.task;
-   console.log("gg",file);
-
+  const blockAndUnblockTeacher=async(req,res)=>{
+    console.log("id",req.params,req.body);
   
-   if(req.files!==null && req.query !== null){
-    try {
-      const file=req.files.task;
-      file.mv(`/home/ambili/Desktop/TutionCenter/frontend/public/uploads/${file.name}`,err=>{
-        if(err){
-          console.log("filemove Error",err);
-          return res.status(500).send(err)
-        }
-       
-
-      })
-      const fileName=file.name;
-      const filePath=`/uploads/${file.name}`;
-      const {teacher,course,subject,startDate,endDate}=req.query
-      console.log("ioio",teacher,course,subject);
-      const tasks=await Task.create({
-         teacher,
-         course,
-         subject,
-         endDate,
-         startDate,
-         task:filePath
-
-      })
-
-      if(tasks){
-        res.status(201).json({
-          _id:tasks.id,
-          teacher:tasks.teacher,
-          course:tasks.course,
-          subject:tasks.subject,
-          endDate:tasks.endDate,
-          sartDate:tasks.startDate,
-          task:tasks.filePath,
-          fileName
-        })
-      }else{
-        res.status(400)
-        throw new Error('Invalid data')
-     }
-      
-
-    } catch (error) {
-      res.status(400)
-        throw new Error(error)
-    }
-   }else{
-    return res.status(400).json('No file uploaded')
-   }
-
-
-  }
-
-  const getTask=async(req,res)=>{
-    console.log(req.params.teacherId,"iii");
-
-     try{
-      const task=await Task.find({teacher:req.params.teacherId})
-      // console.log("yy",task);
-       res.status(200).json(task)
-     }catch(error){
-      res.status(400)
-      throw new Error(error)
-     }
-  }
-
-  const getTasks=async(req,res)=>{
-    console.log(req.params.course,"iii");
-
-     try{
-      const task=await Task.find({course:req.params.course})
-      console.log("yy",task);
-       res.status(200).json(task)
-     }catch(error){
-      res.status(400)
-      throw new Error(error)
-     }
-  }
-
-
-  const updateTeacher=async(req,res)=>{
-    console.log("id",req.params.Id);
-    
-    const teacher=await Teacher.findById(req.params.Id)
-    console.log("tre",teacher);
-  
-    
-    if(teacher.isTeacher===true){
         try{
             console.log();
-            const updateteacher=await Teacher.findByIdAndUpdate(req.params.Id,{"isTeacher":false},{new:true})
+            const teacher=await Teacher.findByIdAndUpdate(req.params.Id,{"status":req.body.status},{new:true})
     
-            console.log("uii",updateteacher);
-            res.status(200).json(updateteacher)
+            console.log("uii",teacher);
+            res.status(200).json(teacher)
         }catch(error){
             res.status(400).json(error)
         }
-       } else{
-            try{
-                const updateteacher=await Teacher.findByIdAndUpdate(req.params.Id,{"isTeacher":true},{new:true})
-    
-                console.log("u",updateteacher);
-                res.status(200).json(updateteacher)
-            }catch(error){
-                res.status(400).json(error)
-            }
-        }
+      
     
     }
 
@@ -336,13 +216,12 @@ module.exports={
     addTeacher,
     getTeachers,
     deleteTeacher,
+    
     getTeacher ,
     editTeacher,
     loginTeacher,
     courseTeacher,
-    addTask,
-    getTask,
-    getTasks,
-    updateTeacher
+   
+    blockAndUnblockTeacher
 
  }

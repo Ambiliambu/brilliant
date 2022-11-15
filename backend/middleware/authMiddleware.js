@@ -1,6 +1,6 @@
 const jwt=require('jsonwebtoken')
 const  asynchandler=require('express-async-handler')
-const {User}=require('../models/userModel')
+const {Student}=require('../models/userModel')
 const {Admin} =require('../models/adminModel')
 
 const protect =asynchandler(async(req,res,next)=>{
@@ -15,7 +15,7 @@ const protect =asynchandler(async(req,res,next)=>{
         const decoded=jwt.verify(token,process.env.JWT_SECRET)
 
         //get user from the token
-        req.user=await User.findById(decoded.id).select('-password')
+        req.student=await Student.findById(decoded.id).select('-password')
 
         next()
 
@@ -45,7 +45,7 @@ const adminprotect =asynchandler(async(req,res,next)=>{
       //verify token
       const decoded=jwt.verify(token,process.env.JWT_SECRET2)
       console.log("decod",decoded);
-      //get user from the token
+      //get admin from the token
       req.admin=await Admin.findById(decoded.id).select('-password')
        console.log("req",req.admin)
       next()

@@ -1,22 +1,24 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
-import authService from './authService'
+import authService from '../user/authService'
 
-//Get user from localstorage
-const user=JSON.parse(localStorage.getItem('user'))
+//Get student from localstorage
+const student=JSON.parse(localStorage.getItem('student'))
 
 const initialState={
-    user:user ? user :null,
+    student:student ? student :null,
     isError:false,
     isSuccess:false,
     isLoading:false,
     message:'',
 }
 
-//Register User
-export const registerUser= createAsyncThunk('auth/register',async(user,thunkAPI)=>{
+//Register student
+export const registerStudent= createAsyncThunk('auth/register',async(student,thunkAPI)=>{
     try{
-        return await authService.registerUser(user)
+        console.log("gas",student);
+        return await authService.registerStudent(student)
     }catch(error){
+        console.log("yyy",error);
         const message=(error.response && error.response.data && error.response.data.message)|| error.message || error.toString()
         
         return thunkAPI.rejectWithValue(message)
@@ -24,11 +26,10 @@ export const registerUser= createAsyncThunk('auth/register',async(user,thunkAPI)
     }
 })
 
-
-//Login User
-export const login= createAsyncThunk('auth/login',async(user,thunkAPI)=>{
+//Login student
+export const login= createAsyncThunk('auth/login',async(student,thunkAPI)=>{
     try{
-        return await authService.login(user)
+        return await authService.login(student)
     }catch(error){
         const message=(error.response && error.response.data && error.response.data.message)|| error.message || error.toString()
         
@@ -57,19 +58,19 @@ export const authSlice= createSlice({
     },
     extraReducers:(builder)=>{
         builder
-        .addCase(registerUser.pending,(state)=>{
+        .addCase(registerStudent.pending,(state)=>{
             state.isLoading=true
         })
-        .addCase(registerUser.fulfilled,(state,action)=>{
+        .addCase(registerStudent.fulfilled,(state,action)=>{
             state.isLoading=false
             state.isSuccess=true
-            state.user=action.payload
+            state.student=action.payload
         })
-        .addCase(registerUser.rejected,(state,action)=>{
+        .addCase(registerStudent.rejected,(state,action)=>{
             state.isLoading=false
             state.isError=true
             state.message=action.payload
-            state.user=null
+            state.student=null
 
         })
 
@@ -79,13 +80,13 @@ export const authSlice= createSlice({
         .addCase(login.fulfilled,(state,action)=>{
             state.isLoading=false
             state.isSuccess=true
-            state.user=action.payload
+            state.student=action.payload
         })
         .addCase(login.rejected,(state,action)=>{
             state.isLoading=false
             state.isError=true
             state.message=action.payload
-            state.user=null
+            state.student=null
 
 
         })
@@ -93,7 +94,7 @@ export const authSlice= createSlice({
 
 
         .addCase(logout.fulfilled,(state)=>{
-            state.user=null
+            state.student=null
     })
     }
 })

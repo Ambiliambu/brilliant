@@ -58,7 +58,7 @@ const {
     const onSubmit=async(data)=>{
       console.log("uujj",data);
 
-      const {coursename,subjectname}=data
+      const {courseId,subjectname}=data
 
       try {
         const config={
@@ -71,7 +71,7 @@ const {
         
 
         const subject= await axios.post('/api/admins/addsubject',{
-          coursename,
+          courseId,
           subjectname
           
         },
@@ -104,10 +104,10 @@ const {
       <select
       type="text" 
       placeholder="Course Name" 
-      name="coursename "
+      name="courseId "
       className='coursnamesub'
       
-      {...register('coursename', { required: {value:true,message:" Course Name is required"},
+      {...register('courseId', { required: {value:true,message:" Course Name is required"},
      
     
     })}
@@ -115,7 +115,7 @@ const {
        <option value="">Choose Course</option>
        {course.map((obj,key)=>
       //  <label key={key}></label>
-             <option value={obj.coursename}>{obj.coursename}</option>
+             <option value={obj._id}>{obj.coursename}</option>
              
        )}
       
@@ -125,7 +125,7 @@ const {
 
 
       </select>
-    <p  style={{ color: "crimson" }}>{errors.coursename?.message}</p>
+    <p  style={{ color: "crimson" }}>{errors.courseId?.message}</p>
     
 
       <input 

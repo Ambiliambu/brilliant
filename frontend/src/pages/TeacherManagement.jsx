@@ -6,8 +6,6 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar'
 import './Form.scss'
-import Navbar from '../components/Sidebar';
-
 
 function TeacherManagement() {
 
@@ -15,7 +13,9 @@ function TeacherManagement() {
   const [teacher,setTeacher]=useState([])
   const [refresh, setrefresh] = useState(false);
  const [deleteId,setdeleteId]=useState('')
- const [editId,seteditId]=useState('')
+ const [search,setSearch]=useState('')
+const [filterData, setFilterData] = useState([]);
+const [data,setData]=useState('')
 
  const navigate=useNavigate()
 
@@ -37,7 +37,7 @@ useEffect(()=>{
       const data=await axios.get('/api/admins/getteachers',config)
 
       setTeacher(data.data)
-      console.log("teacher data",data.data);
+      // console.log("teacher data",data.data);
     } catch (error) {
       console.error(error)
     }
@@ -45,7 +45,7 @@ useEffect(()=>{
 }else{
   navigate('/admin')
 }
-},[refresh,navigate])
+},[refresh,navigate,data])
 
 
 function handleDelete (Id){
@@ -82,6 +82,8 @@ async function deleteTeacher(rowId){
 const addTeacher=async()=>{
   try{
     navigate('/addteacher')
+    setrefresh(!refresh)
+
   }catch(error){
     throw new error(error.response.data.message)
   }
@@ -90,22 +92,31 @@ const addTeacher=async()=>{
 
 
 
-// const editTeacher=async(teacherId)=>{
+async function handleBlockAndUnblock(Id,status){
+  console.log("Id",Id,status);
+  try{ 
+ const {data}=await axios.patch(`/api/admins/blockandunblockteacher/${Id}`,{status:status})
+ setData(data)
 
-//   try {
-//     navigate(`/editteacher/${teacherId}`)
-//   } catch (error) {
-//     throw new error(error.response.data.message)
-    
-//   }
-// }
-async function handleBlock(Id){
-  console.log("Id",Id);
- const {data}=await axios.patch(`/api/admins/updateteacher/${Id}`)
- console.log("pppp",data);
-//  setData(data)
-  
+}catch(error){
+  console.log(error);
 }
+}
+
+useEffect(() => {
+
+  const result = teacher.filter((obj) => {
+   
+      return (obj.courseId?.coursename.toLowerCase().includes(search.toLowerCase())
+      || 
+      obj.subjectId?.subjectname.toLowerCase().includes(search.toLowerCase()))
+
+  
+  });
+  console.log("iiiresult",result);
+  setFilterData(result);
+}, [teacher,search]);
+
 
     const columnss = [
 
@@ -126,32 +137,38 @@ async function handleBlock(Id){
         },
         {
           name: "Course",
-          selector: (row) => row.course,
+          selector: (row) => row.courseId.coursename,
           sortable: true,
         },
         {
           name: "Subject",
-          selector: (row) => row.subject,
+          selector: (row) => row.subjectId.subjectname,
           sortable: true,
         },
         
         {
-          name: "Delete",
+          name: "Action",
           cell: (row) => (
-            <Button className='btn-danger'
-              onClick={()=>{
-                handleBlock(row._id);
+            row.status ? ( <Button className='btn-danger'
+            onClick={()=>{
+              handleBlockAndUnblock(row._id,false);
+            }}
+          >
+            Block
+          </Button>):(<Button className='btn-success'
+          onClick={()=>{
+            handleBlockAndUnblock(row._id,true);
+          }}
+        >
 
-              }}
-            >
-              Block
-            </Button>
-            
-          ),
-
-         
+          Unblock
+        </Button>)
+           
+          )  
+                 
         },
        
+        
         {
           name: "Delete",
           cell: (row) => (
@@ -216,11 +233,23 @@ async function handleBlock(Id){
             <DataTable
               title="Teacher Details"
               columns={columnss}
-              data={teacher}
+              data={filterData}
               pagination
               fixedHeader
               highlightOnHover
-
+              subHeader
+              subHeaderComponent={
+                <input
+                  type="text"
+                  placeholder="Serch here..."
+                  className="w-25 form-control"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                   
+                />
+              }
             />
           </div>
           </div>

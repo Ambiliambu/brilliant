@@ -14,7 +14,6 @@ const crypto = require("crypto");
     });
 
 
-
    const options={
     amount:parseInt(req.body.amount*100),
     currency:"INR",
@@ -44,7 +43,6 @@ try{
         amount,
         studentId,
         courseId,
-        userId,
         razorpayPaymentId ,
         razorpayOrderId,
         razorpaysignature,
@@ -62,10 +60,10 @@ if(hmac == razorpaysignature){
   const newTransaction=Transaction({
     payId:razorpayPaymentId ,
     date:new Date(),
+    status:true,
     amount:amount,
     studentId:studentId,
     courseId:courseId,
-    userId:userId
 
   })
 
@@ -80,7 +78,6 @@ if(hmac == razorpaysignature){
     studentId:studentId,
     courseId:courseId,
     amount:amount,
-    userId:userId
 
   })
  
@@ -93,6 +90,8 @@ if(hmac == razorpaysignature){
 
 
 })
+
+
 
 
 

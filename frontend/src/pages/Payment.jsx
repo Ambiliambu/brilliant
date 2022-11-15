@@ -4,8 +4,9 @@ import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import './Form.scss'
 import {toast} from 'react-toastify'
-import {   useNavigate } from 'react-router-dom'
+import {   Link, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { FaArrowCircleLeft } from 'react-icons/fa'
 
 //razorpay script loading
 function loadScript(src){
@@ -30,22 +31,16 @@ export default function Payment() {
 
   const navigate=useNavigate()
   const [student,setStudent]=useState('')
-  const [course,setCourse]=useState('')
-  const [user,setUser]=useState('')
+  const [coursedata,setCoursedata]=useState('')
 
+const location =useLocation()
+console.log("ostatteo",location.state);
+const {parentsname,parentsnumber,courseId}=location.state;
 
-
-useEffect(()=>{
+ useEffect(()=>{
 //currenet student
 const student=JSON.parse(localStorage.getItem('student'))
 setStudent(student)
-
-//current user
-const  user=JSON.parse(localStorage.getItem('user'))
-setUser(user)
-console.log("ooo",student);
-console.log("user",user);
-
 
  if(student){
    (async function(){
@@ -56,27 +51,21 @@ console.log("user",user);
       
               }
             }
-            const {data}=await axios.get('/api/admins/getcourses',config)
-            console.log("hhh");
-             data.forEach((course)=>{
-
-                if(course.coursename===student.course){
-                    setCourse(course)
-                }
-             })
-
-          
-
+            console.log("coy",courseId);
+            const {data}=await axios.get(`/api/admins/getcourse/${courseId}`,config)
+            setCoursedata(data)
+            console.log("iioooo",data);
           } catch (error) {
             console.error(error)
           }
         })();
+
     }else{
         navigate('/login')
     }
 
 
-},[])
+},[location])
 
 
         
@@ -99,12 +88,13 @@ console.log("user",user);
             }
           }
 
+
         const {data}=await axios.post('/api/users/razorpay',{
-         amount:course.courseamount 
+         amount:coursedata.courseamount 
         },
         config)
 
-        // console.log(data,"data")
+        console.log(data,"data")
          
         const options = {
             key: __DEV__? process.env.RAZORPAY_KEY :'PRODUCTION_KEY', 
@@ -119,20 +109,18 @@ console.log("user",user);
               const result=await axios.post('/api/users/verifypayment',{
                     amount:data.amount,
                     studentId:student._id,
-                    courseId:course._id,
-                    userId:user._id,
+                    courseId:coursedata._id,
                     razorpayPaymentId: response.razorpay_payment_id,
                     razorpayOrderId: response.razorpay_order_id,
                     razorpaysignature: response.razorpay_signature,
                     status:response.status
                 },config)
 
-                console.log("jjj",result.data.userId);
+                console.log("jjj",result.data,courseId,parentsname,parentsnumber);
                 
 
-               const userId=result.data.userId
                const studentId=result.data.studentId
-
+               const paymentId=result.data.transId
                 if(result.data.status){
                    
                     try {
@@ -142,24 +130,20 @@ console.log("user",user);
                   
                           }
                         }
-                            const details=await axios.patch('/api/users/acceptstudent',{userId},{config})
-                        // console.log("details",details.data);
-                             
-                      
-
-                       const data=await axios.patch('/api/users/approvestudent',{studentId},{config})
-                    // console.log("fff",data.data);   
- 
-
-                        // Promise.any([details,data]);
-                   if(details.data.isStudent){
-                        toast.success("Payment success")
-                        navigate('/studentpage')
-                    }else{
-                        toast.error("Student Aleready registered")
                         
-                    }
-                      
+                       const {data}=await axios.patch('/api/users/approvestudent',{
+                        studentId,
+                        courseId,
+                        parentsname,
+                        parentsnumber,
+                        paymentId
+                    },{config})
+ 
+               
+                  if(data){
+                    toast.success("Payment success")
+                    navigate("/studentpage")
+                  }    
                     
                   
                
@@ -189,6 +173,12 @@ console.log("user",user);
     return (
         <div>
             <Header/>
+            <div className='bg-secondary  '>
+      <Link to='/registration'>
+      <span className='h5 m-2 text-primary'><FaArrowCircleLeft/></span>
+      </Link>
+  
+          </div>
         <div className='container '>
             <div>
                 <h2 style={{ color: "darkcyan" }} className="text-center mt-2">Payment</h2>
@@ -205,7 +195,7 @@ console.log("user",user);
                     </div>
                     <div className='row lower mt-2'>
                         <h5 className='details  col text-left'>Course Choosen : </h5>
-                        <h5 className="detailvalue col text-right ">{student.course}</h5>
+                        <h5 className="detailvalue col text-right ">{coursedata.coursename}</h5>
                         </div>
                     <div className='row lower mt-2'>
                         <h5 className='details  col text-left'>Email Address : </h5>
@@ -217,18 +207,18 @@ console.log("user",user);
                         </div>
                     <div className='row lower mt-2'>
                         <h5 className='details  col text-left'>Parent's name : </h5>
-                        <h5 className="detailvalue col text-right ">{student.parentsname}</h5>
+                        <h5 className="detailvalue col text-right ">{parentsname}</h5>
                         </div>
                     <div className='row lower mt-2'>
                         <h5 className='details  col text-left'>Parent's Phone Number :</h5>
-                        <h5 className="detailvalue col text-right ">{student.parentsnumber}</h5>
+                        <h5 className="detailvalue col text-right ">{parentsnumber}</h5>
 
 
                     </div>
                    
                     <div className="row lower">
                         <h6 className="col text-left total mt-3 ">Total Paymet</h6>
-                        <h6 className="col text-right total mt-3"> ₹ {course.courseamount}</h6>
+                        <h6 className="col text-right total mt-3"> ₹ {coursedata.courseamount}</h6>
                     </div>
 
                     <div className="row lower">

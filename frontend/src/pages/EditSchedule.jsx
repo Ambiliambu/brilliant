@@ -11,7 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 
 
-function AddSchedule() {
+function EditSchedule() {
   
   const {
     register,
@@ -22,9 +22,11 @@ function AddSchedule() {
    const navigate=useNavigate()
   
   const courseId=useParams();
-  const [course,setCourse]=useState('')
-  const [teachers,setteachers]=useState([])
+  // console.log("hh",courseId);
+  const [schedule,setSchedule]=useState()
+  const [teachers,setTeachers]=useState([])
   
+  console.log("sche",schedule?.monday);
 
 
   useEffect(() => {
@@ -38,18 +40,17 @@ const admin=JSON.parse(localStorage.getItem('admin'))
 
           }
         }
-        // console.log("ppp",courseId);
-        // const  coursedetails  = await axios.get(`/api/admins/getcourse/${courseId.courseId}`,config);
-        //  setCourse(coursedetails.data)
+        
       
 
-        const {data}=await axios.get(`/api/admins/courseteacher/${courseId.courseId}`,
-       
-        config)
-        // console.log("courseadd",data);
-         setteachers(data)
+       const { data } = await axios.get(`/api/admins/getschedule/${courseId.courseId}`, config);
+        console.log("courseadd",data);
+         setSchedule(data)
 
-   
+         const teacher=await axios.get(`/api/admins/courseteacher/${courseId.courseId}`,
+         config)
+         // console.log("courseadd",data);
+          setTeachers(teacher.data)
 
 
       } catch (error) {
@@ -63,13 +64,16 @@ const admin=JSON.parse(localStorage.getItem('admin'))
 
   },[navigate])
 
+  const onChange=(e)=>{
+   e.preventDefault()
+    console.log("k",e);
+  }
+
 const onSubmit=(datas)=>{
- console.log("data submit",datas,courseId);
+
   datas.courseId=courseId.courseId;
   datas.createDate=new Date();
-  console.log("iii",datas.createDate);
   datas.endDate=moment(datas.createDate, "DD-MM-YYYY").add(6, 'days');
-  console.log("iii", datas.endDate);
    (async function (){
       try {
               const config = {
@@ -80,11 +84,11 @@ const onSubmit=(datas)=>{
               }            
          console.log("oooo" );
            
-              const {data}=await axios.post('/api/admins/addschedule',
-              datas
-              ,config)
+              const {data}=await axios.patch(`/api/admins/editschedule/${courseId.courseId}`,
+              datas,
+              config)
 
-        navigate(`/schedule/${courseId.courseId}`)
+        // navigate(`/schedule/${courseId.courseId}`)
             }catch(error){
               toast.error(error.response.data.message);
                   // console.error(error)
@@ -113,7 +117,7 @@ const onSubmit=(datas)=>{
                 <div className="row 	appearance: none;
 ">
                   <div className='col-12 col-md-6'>
-                    <label >Course : <b>{teachers.courseId.coursename}</b></label>
+                    {/* <label >Course : <b>{teachers.courseId.coursename}</b></label> */}
 
                   </div>
                 </div>
@@ -149,6 +153,7 @@ const onSubmit=(datas)=>{
                        
                          <Controller
                         control={control}
+                        placeholder={schedule?.monday?.startTime}
                         name="monday.startTime"
                         render={({ field: { onChange, onBlur, value, ref } }) => (
                           <TimePicker
@@ -156,6 +161,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -169,6 +175,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value} 
                              disableClock
+                             
 
                           />
                         )}
@@ -192,10 +199,12 @@ const onSubmit=(datas)=>{
                         name="monday.subjectId"
                         className='coursnamesub'
                         {...register("monday.subjectId")}
+                      
+
                         // onChange={(e) => setSubjectm(e.target.value)}
 
                       >
-                        <option value="">Choose Subject</option>
+                        <option value=''>Choose Subject</option>
                       {teachers.map((obj,index)=>
                               <option value={obj.subjectId._id} key={index}>{obj.subjectId.subjectname}</option>
                       )}
@@ -221,7 +230,7 @@ const onSubmit=(datas)=>{
 
 
                       >
-                        <option value="">Choose Teacher</option> 
+                        <option value="" >Choose Teacher</option> 
                     
                        {teachers.map((teacher,index)=>
                            
@@ -284,6 +293,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -297,6 +307,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -322,7 +333,7 @@ const onSubmit=(datas)=>{
                         // onChange={(e) => setSubjecttu(e.target.value)}
 
                       >
-                        <option value="">Choose Subject</option>
+                       <option value="">Choosse Subject </option>
 
                         {teachers.map((obj,index)=>
                               <option value={obj.subjectId._id} key={index}>{obj.subjectId.subjectname}</option>
@@ -348,7 +359,7 @@ const onSubmit=(datas)=>{
 
 
                       >
-                        <option value="">Choose Teacher</option>
+                        <option value="">Choosse Teacher</option>
 
                         {teachers.map((teacher,index)=>
                         <option value={teacher._id} key={index}>{teacher.name}({teacher.subjectId.subjectname})</option>
@@ -404,6 +415,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -417,6 +429,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -442,7 +455,7 @@ const onSubmit=(datas)=>{
                         // onChange={(e) => setSubjectw(e.target.value)}
 
                       >
-                        <option value="">Choose Subject</option>
+                       <option value="">Choosse Subject </option>
 
                         {teachers.map((obj,index)=>
                               <option value={obj.subjectId._id} key={index}>{obj.subjectId.subjectname}</option>
@@ -463,12 +476,12 @@ const onSubmit=(datas)=>{
                         name="wednesday.teacherId"
                         className='coursnamesub'
                         {...register("wednesday.teacherId")}
-                        // value={wteacher}
-                        // onChange={(e) => setTeacherw(e.target.value)}
+                        // value={courseId.courseId}
+                        // onChange={onChange}
 
 
                       >
-                        <option value="">Choose Teacher</option>
+                        <option value="">Choosse Teacher  </option>
 
                         {teachers.map((teacher,index)=>
                         <option value={teacher._id} key={index}>{teacher.name}({teacher.subjectId.subjectname})</option>
@@ -528,6 +541,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -541,6 +555,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -566,7 +581,7 @@ const onSubmit=(datas)=>{
                         // onChange={(e) => setSubjectth(e.target.value)}
 
                       >
-                        <option value="">Choose Subject</option>
+                       <option value="">Choosse Subject  </option>
 
                         {teachers.map((obj,index)=>
                               <option value={obj.subjectId._id} key={index}>{obj.subjectId.subjectname}</option>
@@ -592,7 +607,7 @@ const onSubmit=(datas)=>{
 
 
                       >
-                        <option value="">Choose Teacher</option>
+                        <option value="">Choosse Teacher  </option>
                         {teachers.map((teacher,index)=>
                         <option value={teacher._id} key={index}>{teacher.name}({teacher.subjectId.subjectname})</option>
                           
@@ -647,6 +662,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -660,6 +676,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -685,7 +702,7 @@ const onSubmit=(datas)=>{
                         // onChange={(e) => setSubjectf(e.target.value)}
 
                       >
-                        <option value="">Choose Course</option>
+                       <option value="">Choosse Subject  </option>
 
                         {teachers.map((obj,index)=>
                               <option value={obj.subjectId._id} key={index}>{obj.subjectId.subjectname}</option>
@@ -714,7 +731,7 @@ const onSubmit=(datas)=>{
 
 
                       >
-                        <option value="">Choose Teacher</option>
+                        <option value="">Choosse Teacher </option>
 
                         {teachers.map((teacher,index)=>
                         <option value={teacher._id} key={index}>{teacher.name}({teacher.subjectId.subjectname})</option>
@@ -769,6 +786,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -782,6 +800,7 @@ const onSubmit=(datas)=>{
                             onBlur={onBlur}
                             selected={value}
                              disableClock
+                             
                           />
                         )}
                       />
@@ -805,7 +824,7 @@ const onSubmit=(datas)=>{
                         // onChange={(e) => setSubjects(e.target.value)}
 
                       >
-                        <option value="">Choose Subject</option>
+                       <option value="">Choosse Subject </option>
 
                         {teachers.map((obj,index)=>
                               <option value={obj.subjectId._id} key={index}>{obj.subjectId.subjectname}</option>
@@ -832,7 +851,7 @@ const onSubmit=(datas)=>{
 
 
                       >
-                        <option value="">Choose Teacher</option>
+                        <option value="">Choose Teacher </option>
 
                         {teachers.map((teacher,index)=>
                         <option value={teacher._id} key={index}>{teacher.name}({teacher.subjectId.subjectname})</option>
@@ -878,4 +897,4 @@ const onSubmit=(datas)=>{
   )
 }
 
-export default AddSchedule
+export default EditSchedule

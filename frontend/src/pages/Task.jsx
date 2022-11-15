@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import axios from 'axios'
 import TeacherHeader from '../components/TeacherHeader'
 import './Form.scss'
 import moment from 'moment'
-import { Button, Modal } from 'react-bootstrap'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getTask } from '../apiService'
+import { IconName, MdDelete } from "react-icons/md";
 
 
 function Task() {
@@ -16,26 +17,72 @@ function Task() {
   }
 
   const [task,setTask]=useState([])
-  const [teacher,setTeacher]=useState('')
   const [show, setShow] = useState(false);
+  const [check,setCheck]=useState()
+  const [refresh, setrefresh] = useState(false);
+
+  // const [teacherData,setTeacherData]=useState('')
+
   const handleClose = () => setShow(false);
 
   // const teacher=JSON.parse(localStorage.getItem('teacher'))
-
+  const teacher=JSON.parse(localStorage.getItem('teacher'))
+  // setTeacher(teacher)
+const location=useLocation()
   useEffect(()=>{
-    const teacher=JSON.parse(localStorage.getItem('teacher'))
-    setTeacher(teacher)
+
     if(teacher){
-    getTask(teacher._id).then((response)=>{
-      console.log("oooyyy",response);
-      setTask(response.data)
-    })
+      console.log("uuuuu",teacher);
+      (async function(){
+        try {
+            const config={
+              headers:{
+                "Content-type": "application/json",
+      
+              }
+            }
+          
+
+            const {data}=await axios.get(`/api/users/gettasks/${teacher._id}`,config)
+            console.log("ff",data);
+            setTask(data)
+
+           }catch(error){
+             console.error(error);
+           }
+           })();
+
+   
   }else{
     navigate('/')
   }
-  },[])
+  },[navigate,location,refresh])
 
 
+
+const handleShow=(Id)=>{
+  console.log("id",Id); 
+  setCheck(Id)
+  setShow(true)
+
+}
+
+const handleDelete=(Id)=>{
+  try {
+    const config={
+      headers:{
+        "Content-type": "application/json",
+
+      }
+    }
+     axios.delete(`/api/users/deletetask/${Id}`,config)
+     setrefresh(!refresh)
+
+  }catch(error){
+     console.log(error);
+  }
+
+}
   return (
     <div>
       <TeacherHeader/>
@@ -44,20 +91,47 @@ function Task() {
       <div className='mr-5'>
       <Button onClick={onClick}>Add task +</Button>
       </div>
-      <div>
-          <h5 className='mt-3'>Name:<b>{teacher.name}</b></h5>
+      <div className='row'>
         
+        <div  className='col-md-4 ' >
+        <h5 className='mt-3'>Teacher:<b>{teacher.name}</b></h5>
 
         </div>
+        <div className='col-md-4'>
+        <h5 className='mt-3'>Course:<b>{teacher?.courseId?.coursename}</b></h5>
+
+        </div>
+        <div className='col-md-4'>
+        <h5 className='mt-3'>Subject:<b>{teacher?.subjectId?.subjectname}</b></h5>
+
+        </div>
+      
+
+      
+
+      </div>
+ 
+          
+
+       
         <h4 className='mt-3'>Tasks</h4>
         Submit in Google Classroom
      
-      {task.map((obj)=>
-        <div className='clsdiv'>
+      {task.map((obj,index)=>
+      <div key={index}>
+
+
+
+
+
+
+        <div className='clsdiv' >
         
         <div className='row'>
        <div className='col-4   d-flex align-items-center justify-content-center' >
-        <button className='btn' onClick={() => setShow(true)} >Task: {obj.task}</button>
+        <button className='btn' onClick={()=>{handleShow(obj._id)}} >{obj.name}</button>
+        {obj._id===check ? (
+
         <Modal
         show={show}
         // fullscreen='lg-down'
@@ -73,28 +147,60 @@ function Task() {
           
         </Modal.Header>
       
-        <Modal.Body>
-          <img src={obj.task} alt="img"  className='img-fluid'></img>
-          {/* <h4>{obj.course} </h4> */}
-        </Modal.Body>
+        <Modal.Body className="show-grid"  >
+        <Container>
+        <Row>
+        
+            
+
+             {obj.task.map((tasks,i)=>
+                  
+                    <div key={i}>
+                <img src={tasks} alt="img"  className='img-fluid'></img>
+
+                </div>
+                  )}
+            
+
+            
+          
+           
+           
+          </Row>
+        </Container>
+      </Modal.Body>
+
+
         <>
         <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
         </>
       </Modal>
+        ):(<></>)}
+
        </div>
-        <div className='col-8 mt-2'>
+        <div className='col-6 mt-2'>
         <h6>Start Date: {obj.startDate}</h6>
         <h6>End Date:{obj.endDate}</h6>
+        
         </div>
-       
+        <div className='mt-3' >
+          <button className='btn' onClick={()=>{handleDelete(obj._id)}} >
+            <MdDelete/>
+            </button>
         </div>
+      
+        </div>
+      
       </div>
+      </div>
+
       )}
-     
+    
+
     </div>
- 
+    
     </div>
   )
 }

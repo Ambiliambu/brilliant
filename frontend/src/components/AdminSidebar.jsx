@@ -22,21 +22,7 @@ function AdminSidebar() {
         navigate('/admin')
     }
 
-    const hadleSchedule=async(courseId)=>{
-
-      console.log("ppp",courseId);
-      try {
-        navigate(`/schedule/${courseId}`)
-      } catch (error) {
-    throw new error(error.response.data.message)
-        
-      }
-    }
-
-
-
-
-
+    
 
     useEffect(()=>{
       (async function(){
@@ -60,7 +46,25 @@ function AdminSidebar() {
       })();
   },[])
 
+  const hadleSchedule=async(courseId)=>{
+    console.log("ppp",courseId);
+    try {
+      navigate(`/schedule/${courseId}`)
+    } catch (error) {
+  throw new error(error.response.data.message)
+      
+    }
+  }
 
+  const hadleStudent=async(courseId)=>{
+    console.log("ppp",courseId);
+    try {
+      navigate(`/student/${courseId}`)
+    } catch (error) {
+  throw new error(error.response.data.message)
+      
+    }
+  }
 
   return (
     <div className=''>
@@ -78,21 +82,18 @@ function AdminSidebar() {
                 <Navbar.Collapse id="navbarScroll">
                     <Nav className="m-auto">
                         
-                    <button className='btn' ><Link to='/student'>Student Management</Link></button >
+                  
+
+                    <button className='btn ' ><Link to='/student'>Student Management</Link></button >
+
                     <button className='btn'  ><Link to='/teacher'>Teacher Management</Link></button >
                     <button className='btn'  ><Link to='/course'>Course Management</Link></button >
                     <button className='btn'  ><Link to='/subject'>Subject Management</Link></button >
+                    <button className='btn'  ><Link to='/paymentmanagement'>Payment Management</Link></button >
 
                        
                    <button className='btn'><NavDropdown title="Shedule Management" id="collasible-nav-dropdown">
-                    {/* {course.map((obj,index)=>
-                    <div key={index} >
-                     <NavDropdown.Item ><Link to='/plusone' state={{value:obj.coursename}}>{obj.coursename}</Link> </NavDropdown.Item>
-
-                     </div>
                     
-                      
-                    )}  */}
 
                      {course.map((obj,index)=>
                     <div key={index} >
@@ -112,10 +113,7 @@ function AdminSidebar() {
                     
                       
                     )}  */}
-              {/* <NavDropdown.Item ><Link to='/plusone'>Plus One</Link> </NavDropdown.Item>
-              <NavDropdown.Item >Plus Two </NavDropdown.Item>
-              <NavDropdown.Item >Crash Course </NavDropdown.Item>
-              <NavDropdown.Item >Central University Exam couching </NavDropdown.Item> */}
+           
               
             </NavDropdown>
             </button> 
@@ -140,6 +138,9 @@ function AdminSidebar() {
   
         
 
+
+        
+
                     </Nav>
                     <></>
                 </Navbar.Collapse>
@@ -149,9 +150,10 @@ function AdminSidebar() {
   )
 }
 
+
 export default AdminSidebar
 
 
 
-
+;
 

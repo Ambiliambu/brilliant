@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Spinner from '../components/Spinner'
-import {teacherEntry,reset} from '../features/auth/user/teacher/teacherSlice'
+import {teacherEntry,reset} from '../features/auth/teacher/teacherSlice'
 import { toast } from 'react-toastify'
 import AdminSidebar from '../components/AdminSidebar'
 import axios from 'axios'
+
 
 function AddTeacher() {
     const {
@@ -21,6 +22,8 @@ function AddTeacher() {
             )
 
       const [course,setCourse]=useState([])
+      const [subject,setSubject]=useState([])
+
 
 
 
@@ -37,7 +40,8 @@ function AddTeacher() {
                     const {data}=await axios.get('/api/admins/getcourses',config)
                     // console.log("courseadd",data);
                    setCourse(data)
-        
+                   const subjects=await axios.get('/api/admins/getsubjects',config)
+                   setSubject(subjects.data)
                   
         
                   } catch (error) {
@@ -59,10 +63,9 @@ function AddTeacher() {
           
               },[isError,isSuccess,message,navigate,dispatch])
           
-          
-          
-          
             const onSubmit=(data)=>{
+              let day=new Date()
+              data.createdate=day
               console.log("teacher data",data);
               dispatch(teacherEntry(data))
            
@@ -166,24 +169,8 @@ function AddTeacher() {
 
                   </div>
                   </div>
-                  <div className='col-12 col-md-5'>
-                  <div className="form-group mt-3">
-                    <label>Subject</label>
-                    <input
-                      type="text"
-                      className="form-control mt-1"
-                      id="subject"
-                      name="subject"
-                      {...register('subject', { required: {value:true,message:"Subject is required"},
-              minLength:{value:3,message:"Enter the valid subject"},
-              pattern:{value:/^[a-zA-Z '.-]*$/ ,message:"Enter valid subject"}
-            
-            })}
-                    />
-           <p  style={{ color: "crimson" }}>{errors.subject?.message}</p>
+                  
 
-                  </div>
-                  </div>
                   </div>
                  
 
@@ -191,20 +178,42 @@ function AddTeacher() {
 
 
           <div className='row'>
-            <div className="col-3 ">
+            <div className="col-4">
               <label className="form-label">Courses</label>
               <br />
-            {course.map((obj)=>
-            <div>
+            {course.map((obj,i)=>
+            <div key={i}>
                <input
-                name="course"
+                name="courseId"
                 type="radio"
-                value={obj.coursename}
-                {...register("course")}
+                value={obj._id}
+                {...register("courseId")}
                 required
                 
               />
               <span className="radio-selection"> {obj.coursename}</span>
+              <br />
+            </div>
+            
+            )}
+            
+             
+              
+            </div>
+            <div className="col-4 ">
+              <label className="form-label">Subjects</label>
+              <br />
+            {subject.map((obj,index)=>
+            <div key={index}>
+               <input
+                name="subjectId"
+                type="radio"
+                value={obj._id}
+                {...register("subjectId")}
+                required
+                
+              />
+              <span className="radio-selection"> {obj.subjectname}</span>
               <br />
             </div>
             

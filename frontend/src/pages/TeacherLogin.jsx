@@ -6,7 +6,7 @@ import Spinner from '../components/Spinner'
 import './Form.scss'
 import Header from '../components/Header'
 import { useForm } from 'react-hook-form'
-import { teacherlogin ,reset} from '../features/auth/user/teacher/teacherSlice'
+import { teacherlogin ,reset} from '../features/auth/teacher/teacherSlice'
 
 
 function TeacherLogin() {
@@ -34,12 +34,13 @@ function TeacherLogin() {
 
     }
     if(isSuccess && teacher){
-      if(teacher.isTeacher===true){
-        navigate('/teacherpage')
+      
+      if(teacher.status===true){
+       navigate('/')
       }
     else{
-      navigate('/')
-      toast.error("ooo") 
+      navigate('/teacherlogin')
+      toast.error("Teacher Blocked") 
 
     }
   }
@@ -49,31 +50,6 @@ function TeacherLogin() {
     },[teacher,navigate])
 
 
-
-
-
-
-
-
-
-
-
-//     useEffect(()=>{
-
-//         if (isError){
-//           toast.error(message)
-//         }
-  
-//         console.log("hhh");
-//         if(isSuccess || teacher){
-//  console.log("kkk");
-//           navigate('/')
-
-//         }
-  
-//         dispatch(reset())
-  
-//       },[teacher,isError,isSuccess,message,navigate,dispatch])
 
  
 
@@ -155,15 +131,7 @@ function TeacherLogin() {
           <div>
 
           </div>
-          {/* <div className="d-grid gap-2  ml-3 ">
-            <h6 className=''>Don't have an account?</h6>
-            <button type="submit" className="btn btn-primary ">
-              <Link to='/register'>Register</Link>
-            
-            </button>
-         
-        
-          </div> */}
+          
           </div>
       </div>
      

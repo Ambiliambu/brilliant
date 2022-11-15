@@ -8,7 +8,6 @@ const {Course }=require('../models/adminModel')
 
 const addCourse=asynchandler(async(req,res)=>{
     const {coursename,courseamount}=req.body
-    console.log("gggg",req.body)
     
     if(!coursename || !courseamount){
         res.status(400)
@@ -27,7 +26,6 @@ const addCourse=asynchandler(async(req,res)=>{
         coursename,courseamount
     })
 
-    console.log("iii",course);
 
     if(course){
         res.status(201).json({
@@ -46,6 +44,7 @@ const addCourse=asynchandler(async(req,res)=>{
  const getCourses=asynchandler(async(req,res)=>{
     try {
         const courses=await Course.find({})
+        console.log("iiiii");
         res.json(courses)
         
     } catch (error) {
@@ -101,14 +100,16 @@ const deletecourse=await Course.findById(Id)
 //get course
 
 const getCourse =asynchandler(async (req, res) => {
-  console.log("ppid",req.params.courseId);
+  console.log("ppid",req.params);
     try {
-      const course = await Course.findById(req.params.courseId);
+      const course = await Course.findById({_id:req.params.courseId});
+      // console.log("ll",course);
       res.status(200).json(course);
     } catch (error) {
       res.json(error);
     }
   });
+
 
   // edit course
 

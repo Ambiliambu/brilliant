@@ -1,40 +1,54 @@
 const express=require('express')
+const { createChat, Chats } = require('../controllers/chatController')
 const { createOrder,verifyPayment } = require('../controllers/paymentController')
-const { registerStudent,approveStudent, updateStudent } = require('../controllers/studentController')
-const { loginTeacher,  addTask, getTask, getTasks } = require('../controllers/teacherController')
+const { registerStudent,approveStudent, updateStudent, loginStudent, getStudent, courseStudent } = require('../controllers/studentController')
+const { loginTeacher } = require('../controllers/teacherController')
+const {   addTask, getTasks, deleteTask, StudentTask } = require('../controllers/taskController')
+
+
+
+
+const multer = require('multer');
+
+
+const {upload, cloudinary, storage} = require('../utils/fileStorage');
 const router= express.Router()
-const {getUser,
-    registerUser,
-    loginUser,
-    refreshFunction,
-    logoutUser,
-    acceptStudent
-}=require('../controllers/userController')
+// const {getUser,
+//     registerUser,
+//     loginUser,
+//     refreshFunction,
+//     logoutUser,
+//     acceptStudent
+// }=require('../controllers/userController')
 const {protect}=require('../middleware/authMiddleware')
 
-router.post('/',registerUser)
-router.post('/refresh',refreshFunction)
-router.post('/login',loginUser)
-router.post('/logout',protect,logoutUser)
+router.post('/',registerStudent)
+router.post('/login',loginStudent)
+router.get('/coursestudent',courseStudent)
+
+// router.post('/refresh',refreshFunction)
+// router.post('/logout',protect,logoutUser)
+// router.patch('/acceptstudent',acceptStudent)
+
 router.post('/loginteacher',loginTeacher)
-
-router.get('/user',protect,getUser)
-router.patch('/acceptstudent',acceptStudent)
-
-router.post('/student',registerStudent)
+router.get('/getstudent/:studentId',getStudent)
 router.patch('/approvestudent',approveStudent)
 
 
 
-// router.route('/').get(getUsers).post(setUser)
 
 router.post('/razorpay',createOrder)
 router.post('/verifypayment',verifyPayment)
 
+router.post('/addtask',upload.array('tasks'),addTask)
+router.get('/studenttask/:courseId',StudentTask)
+router.get('/gettasks/:teacherId',getTasks)
+router.delete('/deletetask/:taskId',deleteTask)
 
-router.post('/addtask',addTask)
-router.get('/gettask/:teacherId',getTask)
-router.get('/gettasks/:course',getTasks)
+//chat routes
+
+router.post('/createchat',createChat)
+router.get('/chats/:courseId',Chats)
 
 
 module.exports=router

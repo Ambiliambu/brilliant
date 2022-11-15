@@ -9,11 +9,12 @@ import TeacherHeader from '../components/TeacherHeader'
 function Teacherpage() {
 
 const navigate=useNavigate()
-const [teacherdata,setTeacher]=useState('')
-const [schedule,setSchedule]=useState('')
+// const [teacherData,setTeacherData]=useState('')
+const [schedule,setSchedule]=useState()
+const teacher=JSON.parse(localStorage.getItem('teacher'))
+
     useEffect(()=>{
-      const teacher=JSON.parse(localStorage.getItem('teacher'))
-  console.log("tes",teacher);
+  // console.log("tes",teacher);
       if(teacher){
       (async function(){
         try{
@@ -23,16 +24,11 @@ const [schedule,setSchedule]=useState('')
   
             }
         }
-         const course =await axios.get(`/api/admins/editteacher/${teacher._id}`,config)
-         setTeacher(course.data)
         
-         const {data} =await axios.get('/api/admins/accessschedule',{
-          params:{
-           email:teacher.email
-          }}
-          ,config)
-         setSchedule(data)
-         console.log("eac",data);
+        const schedule = await axios.get(`/api/admins/getschedule/${teacher.courseId._id}`,config);
+      console.log("sch",schedule.data);
+      setSchedule(schedule.data)
+
             
         }catch(error){
   
@@ -44,138 +40,154 @@ const [schedule,setSchedule]=useState('')
     },[])
 
   return (
+
     <div>
       <TeacherHeader/>
       <div className='container mt-5'>
-        <div>
-        <h5>Course:<b>{teacherdata.course}</b></h5>
-          <h5>Name: <b>{teacherdata.name}</b></h5>
+         <div className='row'>
+        
+        <div  className='col-md-4 ' >
+        <h5 className='mt-3'>Teacher:<b>{teacher.name}</b></h5>
+
         </div>
+        <div className='col-md-4'>
+        <h5 className='mt-3'>Course:<b>{teacher?.courseId?.coursename}</b></h5>
+
+        </div>
+        <div className='col-md-4'>
+        <h5 className='mt-3'>Subject:<b>{teacher?.subjectId?.subjectname}</b></h5>
+
+        </div>
+      </div>
      
-      <div className="table-responsive ">
-                    <table className="table table-bordered text-center">
+      {schedule ? (
+        <div className="table-responsive ">
+        <table className="table table-bordered text-center">
 
-                        <thead>
-                            <tr className="bg-light-gray">
+            <thead>
+                <tr className="bg-light-gray">
 
-                                <th className="text-uppercase">Day</th>
-                                <th className="text-uppercase">Time</th>
-                                <th className="text-uppercase">Subject</th>
-                              
+                    <th className="text-uppercase">Day</th>
+                    <th className="text-uppercase">Time</th>
+                    <th className="text-uppercase">Subject</th>
+                  
 
-                            </tr>
-                        </thead>
-                        <tbody>
+                </tr>
+            </thead>
+            <tbody>
 
-                        {teacherdata.name===schedule.mteacher ? (<>
-                          <tr>
-                                <td>
-                                    
-                                    <div className="font-size13 text-light-gray mt-3 ">{schedule.mday}</div>
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3 ">{schedule.mstarttime} -to- {schedule.mendtime}</div>
-                                   
-                                </td>
-
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3 ">{schedule.msubject}</div>
-                                  
-                                </td>
-                                
-                                
-                            </tr></>):(<>
-                             </>)}
-                           
-                             {teacherdata.name===schedule.tuteacher ? (<>
-                            <tr>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.tuday}</div>
-
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3 ">{schedule.tustarttime} -to- {schedule.tuendtime}</div>
-                                
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3 ">{schedule.tusubject}</div>
-                                    
-                                </td>
-                                
-                                
-                                </tr></>):(<>
-                             </>)}
-                             {teacherdata.name===schedule.wteacher ? (<>
-                            
-
-                            <tr>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.wday}</div>
-
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.wstarttime} -to- {schedule.wendtime}</div>
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.wsubject}</div>
-                                </td>
-                                
-                                
-                           
-                                </tr></>):(<>
-                             </>)}
-                             {teacherdata.name===schedule.thteacher ? (<>
-                            <tr>
-                                <td>
-                            <div className="font-size13 text-light-gray mt-3">{schedule.thday}</div>
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.thstarttime} -to- {schedule.thendtime}</div>
-
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.thsubject} </div>
-
-                                </td>
+            {teacher._id=== schedule?.monday?.teacherId?._id  ? (<>
+              <tr>
+                    <td>
+                        
+                        <div className="font-size13 text-light-gray mt-3 ">Monday</div>
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3 ">{schedule?.monday?.startTime} -to- {schedule?.monday?.endTime}</div>
                        
-                                
-                                </tr></>):(<>
-                             </>)}
-                             {teacherdata.name===schedule.fteacher ? (<>
-                            <tr>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.fday}</div>
+                    </td>
 
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.fstarttime} -to- {schedule.fendtime}</div>
-                                </td>
-                                <td className="bg-light-gray"><div className="font-size13 text-light-gray mt-3">{schedule.fsubject}</div>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3 ">{schedule?.monday?.subjectId?.subjectname}</div>
+                      
+                    </td>
+                    
+                    
+                </tr></>):(<>
+                 </>)}
+               
+                 {teacher._id===schedule?.tuesday?.teacherId._id ? (<>
+                <tr>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">Tuesday</div>
 
-                                </td>
-                               
-                                </tr></>):(<>
-                             </>)}
-                             {teacherdata.name===schedule.steacher ? (<>
-                            <tr>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.sday}</div>
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3 ">{schedule?.tuesday?.startTime} -to- {schedule?.tuesday?.endTime}</div>
+                    
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3 ">{schedule?.tuesday?.subjectId?.subjectname}</div>
+                        
+                    </td>
+                    
+                    
+                    </tr></>):(<>
+                 </>)}
+                 {teacher._id===schedule?.wednesday?.teacherId._id  ? (<>
+                
 
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.sstarttime} -to- {schedule.sendtime}</div>
-                                </td>
-                                <td>
-                                <div className="font-size13 text-light-gray mt-3">{schedule.ssubject}</div>
+                <tr>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">Wednesday</div>
 
-                                </td>
-                              
-                                
-                                </tr></>):(<>
-                             </>)}
-                        </tbody>
-                    </table>
-                </div>
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3"> {schedule?.wednesday?.startTime} -to- {schedule?.wednesday?.endTime}</div>
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">{schedule?.wednesday?.subjectId?.subjectname}</div>
+                    </td>
+                    
+                    
+               
+                    </tr></>):(<>
+                 </>)}
+                 {teacher._id===schedule?.thursday?.teacherId._id ? (<>
+                <tr>
+                    <td>
+                <div className="font-size13 text-light-gray mt-3">Thursday</div>
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">{schedule?.thursday?.startTime} -to- {schedule?.thursday?.endTime}</div>
+
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">{schedule?.thursday?.subjectId?.subjectname} </div>
+
+                    </td>
+           
+                    
+                    </tr></>):(<>
+                 </>)}
+                 {teacher._id===schedule?.friday?.teacherId._id ? (<>
+                <tr>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">Friday</div>
+
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">{schedule?.friday?.startTime} -to- {schedule?.friday?.endTime}</div>
+                    </td>
+                    <td className="bg-light-gray"><div className="font-size13 text-light-gray mt-3">{schedule?.friday?.subjectId?.subjectname}</div>
+
+                    </td>
+                   
+                    </tr></>):(<>
+                 </>)}
+                 {teacher._id===schedule?.saturday?.teacherId._id  ? (<>
+                <tr>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">Saturday</div>
+
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">{schedule?.saturday?.startTime} -to- {schedule?.saturday?.endTime}</div>
+                    </td>
+                    <td>
+                    <div className="font-size13 text-light-gray mt-3">{schedule?.saturday?.subjectId?.subjectname}</div>
+
+                    </td>
+                  
+                    
+                    </tr></>):(<>
+                 </>)}
+            </tbody>
+        </table>
+    </div>
+      ):(<>
+        <div><h1 className='text-center'>No Schedule</h1></div>
+        </>)}
       </div>
 
       

@@ -1,20 +1,22 @@
-import React from 'react'
-import { Card, Container, Row } from 'react-bootstrap'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { Card, Container, Row, Toast } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import TeacherHeader from '../components/TeacherHeader'
 import './Form.scss'
+import {toast} from 'react-toastify'
 
 function Dashboard() {
 
 
   const navigate=useNavigate()
-  const {user}=useSelector((state)=>state.auth)
   const {teacher}=useSelector((state)=>state.teacherauth)
+  const {student}=useSelector((state)=>state.auth)
 
-
+  
 
   
   
@@ -39,6 +41,10 @@ function Dashboard() {
     title:" Central university exam batch",
   }]
 
+ const handleClick=()=>{
+  navigate('/studentpage')
+  toast.success("Already Registered")
+ }
 
   return (
 
@@ -46,24 +52,12 @@ function Dashboard() {
       {teacher ? <TeacherHeader/> : <Header/>}
        
       <Container>
-        {/* <div className=''>
-          <img src="https://www.ebuyer.com/blog/wp-content/uploads/2017/08/student-studying.jpg" style={{ width: "100%", height: "600px" }} alt="img" />
-
-        </div> */}
-      
-
-
         <div className='maindiv row ' >
           <div  className="col-12 col-md-6  " >
             <h3 className='text-center sidetitle'>Focus on your goals and<br/> blur everything else.</h3>
-           {/* {user ? (            
-           <button className='btn-primary leftdiv'><Link to='/registration'>Register Now</Link></button>
-           ):
-           (
-            <button className='btn-primary leftdiv'><Link to='/login'>Register Now</Link></button>
-
-           )} */}
-           <button className='btn-primary leftdiv'><Link to='/registration'>Register Now</Link></button>
+      {student?.paymentId ? (<button className='btn-primary leftdiv' onClick={handleClick}>Register Now</button>):(<button className='btn-primary leftdiv'><Link to='/registration'>Register Now</Link></button>
+)}
+           {/* <button className='btn-primary leftdiv'><Link to='/registration'>Register Now</Link></button> */}
           </div>
           <div  className="col-12 col-md-6">
         <img src="https://st.depositphotos.com/1404973/1331/i/600/depositphotos_13314280-stock-photo-child-learns-at-night.jpg" className='img-fluid' alt="img"/>
@@ -78,7 +72,7 @@ function Dashboard() {
 
           {courses.map((course,index)=>
              
-           <div className='col-12 col-md-3' key='index' >
+           <div className='col-12 col-md-3' key={index} >
             <div className="boxshadow" >
               <img src={course.image} className='img-fluid shadow-4  ' alt="course" />
             </div>

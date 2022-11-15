@@ -20,8 +20,6 @@ function SubjectManagement() {
 useEffect(()=>{
   const admin=localStorage.getItem('admin');
   if(admin){
-    
-  
   (async function(){
     try {
       const config={
@@ -30,10 +28,9 @@ useEffect(()=>{
 
         }
       }
-      console.log("data sub");
 
       const data=await axios.get('/api/admins/getsubjects',config)
-      console.log("data subb",data.data);
+      console.log("data subb",data);
       setSubject(data.data)
     } catch (error) {
       console.error(error)
@@ -81,21 +78,13 @@ async function deleteSubject(rowId){
 
 
 
-// const editCourse=async(courseId)=>{
 
-//   try {
-//     navigate(`/editcourse/${courseId}`)
-//   } catch (error) {
-//     throw new error(error.response.data.message)
-    
-//   }
-// }
 
     const columnss = [
 
         {
           name: "Course Name",
-          cell: (row) =>row.coursename
+          cell: (row) =>row.courseId.coursename
         
         },
         {
@@ -103,22 +92,6 @@ async function deleteSubject(rowId){
           selector: (row) => row.subjectname,
           sortable: true,
         },
-    
-        // {
-        //   name: "Edit",
-        //   cell: (row) => (
-        //     <Button
-        //       onClick={()=>{
-        //         editCourse(row._id)
-        //       }}
-        //     >
-        //       Edit
-        //     </Button>
-            
-        //   ),
-
-         
-        // },
         {
           name: "Delete",
           cell: (row) => (

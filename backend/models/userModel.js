@@ -2,30 +2,7 @@ const mongoose=require('mongoose')
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId 
 
-const userSchema=mongoose.Schema({
-    name:{
-        type:String,
-        required:[true,'Please add an name']
-    },
-    email:{
-        type:String,
-        required:[true,'Please add an email'],
-        unique:true
-    },
-    password:{
-        type:String,
-        required:[true,'Please add an password']
-    }, 
-    isStudent:{
-        type:Boolean,
-        required:true,
-        default:false
-        
-    }
 
-},{
-    timestamps:true
-})
 
 
 
@@ -39,30 +16,33 @@ const studentSchema=mongoose.Schema({
         required:[true,'Please add an email'],
         unique:true
     },
-    parentsname:{
+    password:{
         type:String,
-        required:[true,'Please add an parent name']
-    },
-    parentsnumber:{
-        type:Number,
-        required:[true,'Please add parent number']
-    },
+        required:[true,'Please add an password']
+    }, 
     phonenumber:{
         type:Number,
         required:[true,'Please add phone number']
     },
-    course:{
+    parentsname:{
         type:String,
-        required:[true,'Please add course']
+        
     },
-    userId:{
-        type:ObjectId,
-        ref :  "User",
+    parentsnumber:{
+        type:Number
     },
+    courseId:{
+         type:mongoose.Schema.Types.ObjectId,
+         ref:"Course"
+    },
+    paymentId:{
+        type:mongoose.Schema.Types.ObjectId,
+    },
+ 
     status:{
         type:Boolean,
         required:true,
-        default:false
+        default:true
         
     }
 
@@ -83,17 +63,16 @@ const transactionSchema=mongoose.Schema({
         required:true
     },
     studentId:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Student",
         required:true
     },
     courseId:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Course",
         required:true
     },
-    userId:{
-        type:String,
-        required:true
-    },
+   
     amount:{
         type:Number,
         reqiured:true
@@ -109,16 +88,19 @@ const transactionSchema=mongoose.Schema({
     })
 
     const taskSchema=mongoose.Schema({
-        teacher:{
-            type:String,
+        teacherId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Teacher",
             required:true
         },
-        course:{
-            type:String,
+        courseId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Course",
             required:true,
         },
-        subject:{
-            type:String,
+        subjectId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Subject",
             required:true
         }, 
         startDate:{
@@ -129,7 +111,15 @@ const transactionSchema=mongoose.Schema({
             type:String,
             required:true
         },
-        task:{
+        task:[{
+            type:String,
+            required:true
+        }],
+        fileName:[{
+            type:String,
+            required:true,
+        }],
+        name:{
             type:String,
             required:true
         }
@@ -140,12 +130,11 @@ const transactionSchema=mongoose.Schema({
     })
 
 
-const User= mongoose.model("User",userSchema)
 const Student=mongoose.model("Student",studentSchema)
 const Transaction =mongoose.model("Transaction",transactionSchema)
 const Task=mongoose.model('Task',taskSchema)
 
-module.exports= {User,Student,Transaction,Task}
+module.exports= {Student,Transaction,Task}
 
 
 

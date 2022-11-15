@@ -19,8 +19,8 @@ const teacherEntry =async (teacherData)=>{
 const API_URL2='/api/users/'
 //Login teacher
 const teacherlogin =async (teacherData)=>{
-    const response=await axios.post(API_URL2+'loginteacher',teacherData)
-    console.log("response",response);
+    const response =await axios.post(API_URL2+'loginteacher',teacherData)
+    console.log('iiiii',response);
     if(response.data){
         localStorage.setItem('teacher',JSON.stringify(response.data))
     }
