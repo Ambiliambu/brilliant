@@ -30,6 +30,15 @@ Node.js, Express.js, React.js, Mongoose, Bootstrap, JWT, JSX, Razorpay, Cloudina
 
 ## Screenshots
 
+![Screenshot from 2022-11-15 13-49-19](https://user-images.githubusercontent.com/99420180/201871266-cc051e20-6e35-41c4-bc65-9fa5c0ff8408.png)
+![Screenshot from 2022-11-15 13-49-36](https://user-images.githubusercontent.com/99420180/201871356-8515ee4e-dc75-4186-b97d-2629eb1c35bd.png)
+![Screenshot from 2022-11-15 13-49-49](https://user-images.githubusercontent.com/99420180/201871428-be334248-53fd-4994-9197-7f5cc3a4a3b5.png)
+![Screenshot from 2022-11-15 13-51-34](https://user-images.githubusercontent.com/99420180/201871478-89ec9763-be3d-4722-8161-0b1eac5abb3c.png)
+![Screenshot from 2022-11-15 13-52-23](https://user-images.githubusercontent.com/99420180/201871559-40f7ffd7-41a5-4580-8e79-c7b699ae868c.png)
+![Screenshot from 2022-11-15 13-52-48](https://user-images.githubusercontent.com/99420180/201872229-932ca53c-54e4-4058-b6ae-90c554796b5b.png)
+![Screenshot from 2022-11-15 13-53-05](https://user-images.githubusercontent.com/99420180/201871807-52814dfa-b4ed-46d4-a1df-5eb356f60d00.png)
+![Screenshot from 2022-11-15 13-53-27](https://user-images.githubusercontent.com/99420180/201871852-0152dde1-fb46-4b97-a18c-8619cdebae9f.png)
+
 ## Getting Started
 
 To get started you can simply clone this brilliant repository and  install the dependencies.<br/>
